@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,7 +53,7 @@
     padding:24px;
   }
   .screen.active{display:flex;}
-
+ 
   /* ---------- LOGIN ---------- */
   #screen-login{
     background:
@@ -146,7 +147,7 @@
   }
   .error-msg{ color:#B23A48; font-size:.8rem; margin-top:10px; min-height:16px; }
   .hint{ font-size:.72rem; color:var(--ink-soft); margin-top:18px; opacity:.7;}
-
+ 
   /* ---------- SETUP ---------- */
   .card{
     background: var(--white);
@@ -159,7 +160,7 @@
   }
   .card h2{ color:var(--rose-deep); font-size:1.9rem; margin:0 0 6px; text-align:center;}
   .card .sub{ text-align:center; color:var(--ink-soft); font-size:.85rem; margin-bottom:24px;}
-
+ 
   .links-grid{ display:flex; gap:14px; margin-top:20px; flex-wrap:wrap;}
   .link-card{
     flex:1; min-width:170px;
@@ -176,7 +177,7 @@
   .link-card .emoji{ font-size:2rem; }
   .link-card h3{ margin:8px 0 4px; font-family:'Cormorant Garamond',serif; font-size:1.4rem;}
   .link-card small{ color:var(--ink-soft); font-size:.7rem; word-break:break-all;}
-
+ 
   /* ---------- CHAT ---------- */
   #screen-chat{ padding:0; align-items:stretch; }
   .chat-wrap{ width:100%; max-width:600px; margin:0 auto; height:100vh; display:flex; flex-direction:column; background:var(--cream);}
@@ -199,11 +200,11 @@
     padding:4px 6px; border-radius:8px; transition:background .15s;
   }
   .icon-btn:hover{ background: var(--cream-deep); }
-
+ 
   .tabbar{ display:flex; background:var(--white); border-bottom:1px solid var(--gold-soft);}
   .tab{ flex:1; text-align:center; padding:10px; font-size:.8rem; letter-spacing:.05em; text-transform:uppercase; cursor:pointer; color:var(--ink-soft); border-bottom:2px solid transparent;}
   .tab.active{ color:var(--rose-deep); border-color:var(--rose-deep); font-weight:600;}
-
+ 
   .prompt-banner{
     margin:10px 14px 0;
     background: linear-gradient(135deg, var(--blush), var(--gold-soft));
@@ -222,7 +223,7 @@
   .love-meter .bar{ flex:1; height:10px; background:var(--cream-deep); border-radius:999px; overflow:hidden;}
   .love-meter .fill{ height:100%; background: linear-gradient(90deg, var(--rose), var(--gold)); transition:width .3s ease; }
   .love-meter button{ background:var(--blush); border:none; width:26px;height:26px;border-radius:50%; cursor:pointer; font-weight:700; color:var(--rose-deep);}
-
+ 
   .chat-area{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:6px; }
   .date-sep{ text-align:center; font-size:.7rem; color:var(--ink-soft); margin:14px 0 6px; letter-spacing:.05em; text-transform:uppercase;}
   .bubble-row{ display:flex; margin-bottom:2px; }
@@ -249,9 +250,17 @@
   .bubble.kiss{ font-size:1.6rem; padding:6px 12px; }
   .bubble.gift{ text-align:center; font-size:1.5rem; }
   .bubble img{ max-width:100%; border-radius:12px; display:block; }
+  .bubble .del-btn{
+    position:absolute; top:-8px; right:-8px;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--white); border:1px solid var(--gold-soft);
+    font-size:.65rem; line-height:18px; text-align:center;
+    cursor:pointer; color:var(--ink-soft); opacity:0; transition:opacity .15s;
+  }
+  .bubble:hover .del-btn{ opacity:1; }
   .meta{ font-size:.62rem; color:var(--ink-soft); margin-top:4px; text-align:right;}
   .typing-indicator{ font-size:.75rem; color:var(--ink-soft); padding:0 16px 4px; font-style:italic; min-height:18px;}
-
+ 
   .input-area{ background:var(--white); border-top:1px solid var(--gold-soft); padding:10px 14px; }
   .input-row{ display:flex; gap:8px; align-items:flex-end;}
   .input-row textarea{ resize:none; min-height:42px; max-height:100px; border-radius:20px; padding:10px 16px;}
@@ -267,15 +276,15 @@
     padding:7px 4px; font-size:.7rem; cursor:pointer; color:var(--ink); text-align:center;
   }
   .extra-btn:hover{ background:var(--gold-soft); }
-
+ 
   .permanent-note{ text-align:center; font-size:.65rem; color:var(--ink-soft); padding:6px 10px; opacity:.7;}
-
+ 
   /* Memory Lane */
   .memory-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:14px; overflow-y:auto; flex:1; }
   .memory-item{ background:var(--white); border:1px solid var(--gold-soft); border-radius:14px; padding:10px; font-size:.8rem;}
   .memory-item img{ width:100%; border-radius:10px; margin-bottom:6px;}
   .empty-state{ text-align:center; color:var(--ink-soft); padding:40px 20px; font-size:.85rem;}
-
+ 
   /* Modal */
   .modal-overlay{
     position:fixed; inset:0; background:rgba(46,37,33,0.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
@@ -288,17 +297,17 @@
   .gift-opt.selected{ border-color:var(--rose); background:var(--blush); }
   .modal-actions{ display:flex; gap:10px; margin-top:16px; }
   .modal-actions .btn{ flex:1; }
-
+ 
   ::-webkit-scrollbar{ width:6px; }
   ::-webkit-scrollbar-thumb{ background: var(--gold-soft); border-radius:10px; }
-
+ 
   @media (max-width:480px){
     .login-card, .card{ padding:32px 22px; }
   }
 </style>
 </head>
 <body>
-
+ 
 <!-- ================= LOGIN SCREEN ================= -->
 <div class="screen active" id="screen-login">
   <div class="login-card">
@@ -317,7 +326,7 @@
     <div class="hint">This space is 100% private between us two.</div>
   </div>
 </div>
-
+ 
 <!-- ================= SETUP SCREEN ================= -->
 <div class="screen" id="screen-setup">
   <div class="card">
@@ -338,28 +347,36 @@
     <button class="btn" onclick="handleSetup()">Create Our Space 💕</button>
   </div>
 </div>
-
+ 
 <!-- ================= LINKS SCREEN ================= -->
 <div class="screen" id="screen-links">
   <div class="card">
     <h2 class="serif">Our Private Links</h2>
     <div class="sub" id="links-sub">Choose which one is you on this device.</div>
     <div class="links-grid">
-      <div class="link-card boy" onclick="chooseRole('boy')">
+      <div class="link-card boy">
         <div class="emoji">💙</div>
         <h3 id="link-boy-name">Boy Link</h3>
         <small>Opens chat directly as him next time</small>
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px;">
+          <button class="btn outline" style="padding:8px; font-size:.75rem;" onclick="chooseRole('boy')">Open as Boy</button>
+          <button class="btn gold" style="padding:8px; font-size:.75rem;" onclick="copyLink('boy')">🔗 Copy Boy Link</button>
+        </div>
       </div>
-      <div class="link-card girl" onclick="chooseRole('girl')">
+      <div class="link-card girl">
         <div class="emoji">💗</div>
         <h3 id="link-girl-name">Girl Link</h3>
         <small>Opens chat directly as her next time</small>
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px;">
+          <button class="btn outline" style="padding:8px; font-size:.75rem;" onclick="chooseRole('girl')">Open as Girl</button>
+          <button class="btn gold" style="padding:8px; font-size:.75rem;" onclick="copyLink('girl')">🔗 Copy Girl Link</button>
+        </div>
       </div>
     </div>
     <div class="hint">Send this same page to your partner. They log in once and pick the opposite link — after that it opens straight to the chat.</div>
   </div>
 </div>
-
+ 
 <!-- ================= CHAT SCREEN ================= -->
 <div class="screen" id="screen-chat">
   <div class="chat-wrap" data-theme="light" id="chat-theme-root">
@@ -377,7 +394,7 @@
       <div class="tab active" id="tab-chat" onclick="switchTab('chat')">Chat</div>
       <div class="tab" id="tab-memory" onclick="switchTab('memory')">Memory Lane</div>
     </div>
-
+ 
     <div id="pane-chat" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
       <div class="prompt-banner" id="daily-prompt">💭 "What made you smile today because of me?"</div>
       <div class="love-meter">
@@ -406,13 +423,13 @@
       </div>
       <div class="permanent-note">🔒 This chat is 100% private between us two — no auto-delete, full permanent history.</div>
     </div>
-
+ 
     <div id="pane-memory" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
       <div class="memory-grid" id="memory-grid"></div>
     </div>
   </div>
 </div>
-
+ 
 <!-- ================= MODALS ================= -->
 <div class="modal-overlay" id="modal-lovenote">
   <div class="modal">
@@ -424,7 +441,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-gift">
   <div class="modal">
     <h3>Send a Gift 🎁</h3>
@@ -440,7 +457,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-video">
   <div class="modal">
     <h3>Share a Video 🎥</h3>
@@ -456,7 +473,7 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="modal-overlay" id="modal-settings">
   <div class="modal">
     <h3>Settings ⚙️</h3>
@@ -467,7 +484,7 @@
     </div>
   </div>
 </div>
-
+ 
 <script>
 /* ---------------- STATE ---------------- */
 let myRole = null;         // 'boy' | 'girl'
@@ -484,7 +501,7 @@ let seenStatus = {};
 let mediaRecorderVoice, voiceChunks, voiceStartTime, voiceTimerInterval;
 let videoRecorder, videoChunks, videoStream;
 const MAX_MEDIA_BYTES = 4.5 * 1024 * 1024;
-
+ 
 const DAILY_PROMPTS = [
   "What made you smile today because of me?",
   "What's your favorite memory of us this month?",
@@ -494,10 +511,10 @@ const DAILY_PROMPTS = [
   "What made your heart feel full today?",
   "If you could relive one moment with me, which one?"
 ];
-
+ 
 /* ---------------- INIT ---------------- */
 window.addEventListener('DOMContentLoaded', init);
-
+ 
 async function init(){
   spawnPetals();
   try{
@@ -514,7 +531,26 @@ async function init(){
     }
   }catch(e){ console.log('init check', e); }
 }
-
+ 
+function getRoleFromHash(){
+  const h = window.location.hash.replace('#','').toLowerCase();
+  return (h === 'boy' || h === 'girl') ? h : null;
+}
+ 
+function roleLink(role){
+  return window.location.origin + window.location.pathname + '#' + role;
+}
+ 
+async function copyLink(role){
+  const url = roleLink(role);
+  try{
+    await navigator.clipboard.writeText(url);
+    alert('Link copied:\n' + url + '\n\nSend this to your partner. Opening it will pre-select their side.');
+  }catch(e){
+    prompt('Copy this link:', url);
+  }
+}
+ 
 function spawnPetals(){
   const el = document.getElementById('screen-login');
   for(let i=0;i<14;i++){
@@ -527,7 +563,7 @@ function spawnPetals(){
     el.appendChild(p);
   }
 }
-
+ 
 /* ---------------- STORAGE HELPERS ---------------- */
 async function safeGet(key, shared){
   try{ return await window.storage.get(key, shared); }
@@ -541,7 +577,7 @@ async function safeList(prefix, shared){
   try{ return await window.storage.list(prefix, shared); }
   catch(e){ return null; }
 }
-
+ 
 /* ---------------- LOGIN ---------------- */
 function handleLogin(){
   const u = document.getElementById('login-user').value.trim();
@@ -554,17 +590,22 @@ function handleLogin(){
     err.textContent = 'Hmm, that code doesn\'t match. Try again 💭';
   }
 }
-
+ 
 async function goToSetupOrLinks(){
   const configRes = await safeGet('config', true);
   if(configRes){
     coupleConfig = JSON.parse(configRes.value);
+    const hashRole = getRoleFromHash();
+    if(hashRole){
+      chooseRole(hashRole);
+      return;
+    }
     showLinksScreen();
   }else{
     showScreen('screen-setup');
   }
 }
-
+ 
 /* ---------------- SETUP ---------------- */
 async function handleSetup(){
   const girl = document.getElementById('setup-girl').value.trim() || 'Her';
@@ -573,32 +614,38 @@ async function handleSetup(){
   if(!code) code = 'ourlove' + Math.floor(1000+Math.random()*9000);
   coupleConfig = { girlName: girl, boyName: boy, secretCode: code };
   await safeSet('config', JSON.stringify(coupleConfig), true);
+  const hashRole = getRoleFromHash();
+  if(hashRole){
+    chooseRole(hashRole);
+    return;
+  }
   showLinksScreen();
 }
-
+ 
 function showLinksScreen(){
   document.getElementById('link-boy-name').textContent = (coupleConfig.boyName || 'Boy') + ' Link';
   document.getElementById('link-girl-name').textContent = (coupleConfig.girlName || 'Girl') + ' Link';
   showScreen('screen-links');
 }
-
+ 
 async function chooseRole(role){
   myRole = role;
   await safeSet('myrole', role, false);
+  try{ window.location.hash = role; }catch(e){}
   enterChat();
 }
-
+ 
 async function switchLinkRole(){
   closeModal('modal-settings');
   showLinksScreen();
 }
-
+ 
 /* ---------------- SCREEN SWITCH ---------------- */
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
+ 
 /* ---------------- CHAT ---------------- */
 async function enterChat(){
   showScreen('screen-chat');
@@ -606,10 +653,10 @@ async function enterChat(){
   const g = coupleConfig.girlName || 'Girl';
   document.getElementById('couple-title').textContent = `${b} 💕 ${g}`;
   document.getElementById('settings-role-label').textContent = myRole === 'boy' ? b : g;
-
+ 
   const dayIndex = Math.floor((Date.now()/86400000)) % DAILY_PROMPTS.length;
   document.getElementById('daily-prompt').textContent = '💭 "' + DAILY_PROMPTS[dayIndex] + '"';
-
+ 
   await refreshLoveMeter();
   await refreshSeen();
   await refreshMessages();
@@ -617,7 +664,7 @@ async function enterChat(){
   startPolling();
   markSeen();
 }
-
+ 
 function startPolling(){
   if(pollTimer) clearInterval(pollTimer);
   pollTimer = setInterval(async ()=>{
@@ -627,9 +674,9 @@ function startPolling(){
     await refreshSeen();
   }, 2500);
 }
-
+ 
 function otherRole(){ return myRole === 'boy' ? 'girl' : 'boy'; }
-
+ 
 /* ---- messages (each message is its own storage key so history scales) ---- */
 async function refreshMessages(){
   const listRes = await safeList('msg:', true);
@@ -642,14 +689,19 @@ async function refreshMessages(){
   for(const k of newKeys){
     try{
       const r = await window.storage.get(k, true);
-      if(r){ messagesMap[k] = JSON.parse(r.value); fetchedMsgKeys.add(k); }
+      if(r){
+        const parsed = JSON.parse(r.value);
+        parsed._key = k;
+        messagesMap[k] = parsed;
+        fetchedMsgKeys.add(k);
+      }
     }catch(e){ /* ignore individual fetch failure */ }
   }
   messages = keys.map(k=>messagesMap[k]).filter(Boolean);
   lastMsgCount = keys.length;
   renderMessages();
 }
-
+ 
 function renderMessages(){
   const area = document.getElementById('chat-area');
   area.innerHTML = '';
@@ -668,7 +720,7 @@ function renderMessages(){
     row.className = 'bubble-row ' + m.sender;
     const bubble = document.createElement('div');
     bubble.className = 'bubble ' + m.sender + (m.type==='love-note' ? ' love-note': '') + (m.type==='kiss' ? ' kiss':'') + (m.type==='gift' ? ' gift':'');
-
+ 
     if(m.type === 'photo'){
       const img = document.createElement('img');
       img.src = m.imgData;
@@ -691,10 +743,20 @@ function renderMessages(){
     } else {
       bubble.textContent = m.text;
     }
+ 
+    if(m.sender === myRole && m._key){
+      const del = document.createElement('div');
+      del.className = 'del-btn';
+      del.textContent = '✕';
+      del.title = 'Delete this message';
+      del.onclick = (evt)=>{ evt.stopPropagation(); deleteMessage(m._key); };
+      bubble.appendChild(del);
+    }
+ 
     row.appendChild(bubble);
     area.appendChild(row);
   });
-
+ 
   if(messages.length){
     const last = messages[messages.length-1];
     if(last.sender === myRole && seenStatus[otherRole()] >= last.ts){
@@ -706,7 +768,7 @@ function renderMessages(){
   }
   area.scrollTop = area.scrollHeight;
 }
-
+ 
 function formatDate(d){
   const today = new Date();
   const yest = new Date(); yest.setDate(today.getDate()-1);
@@ -714,7 +776,16 @@ function formatDate(d){
   if(d.toDateString() === yest.toDateString()) return 'Yesterday';
   return d.toLocaleDateString(undefined, {day:'numeric', month:'short', year:'numeric'});
 }
-
+ 
+async function deleteMessage(key){
+  if(!confirm('Delete this message for both of you? This can\'t be undone.')) return;
+  try{ await window.storage.delete(key, true); }catch(e){ /* already gone or failed, proceed to clean local state */ }
+  delete messagesMap[key];
+  fetchedMsgKeys.delete(key);
+  messages = messages.filter(m => m._key !== key);
+  renderMessages();
+}
+ 
 async function pushMessage(msg){
   const ts = msg.ts || Date.now();
   msg.ts = ts;
@@ -724,6 +795,7 @@ async function pushMessage(msg){
     alert("That didn't send — it may be too large. Try a shorter clip or smaller photo.");
     return;
   }
+  msg._key = key;
   messagesMap[key] = msg;
   fetchedMsgKeys.add(key);
   const keys = Array.from(fetchedMsgKeys).sort();
@@ -732,7 +804,7 @@ async function pushMessage(msg){
   renderMessages();
   markSeen();
 }
-
+ 
 async function sendMessage(){
   const input = document.getElementById('msg-input');
   const text = input.value.trim();
@@ -741,11 +813,11 @@ async function sendMessage(){
   await pushMessage({ id: Date.now()+'-'+Math.random().toString(36).slice(2), sender: myRole, type:'text', text, ts: Date.now() });
   await setTyping(false);
 }
-
+ 
 async function sendKiss(){
   await pushMessage({ id: Date.now()+'-'+Math.random().toString(36).slice(2), sender: myRole, type:'kiss', text:'💋', ts: Date.now() });
 }
-
+ 
 function openLoveNote(){ document.getElementById('modal-lovenote').classList.add('active'); }
 async function sendLoveNote(){
   const text = document.getElementById('lovenote-text').value.trim();
@@ -754,7 +826,7 @@ async function sendLoveNote(){
   document.getElementById('lovenote-text').value='';
   closeModal('modal-lovenote');
 }
-
+ 
 function openGift(){ selectedGift=null; document.querySelectorAll('.gift-opt').forEach(g=>g.classList.remove('selected')); document.getElementById('modal-gift').classList.add('active'); }
 function selectGift(el, emoji){
   document.querySelectorAll('.gift-opt').forEach(g=>g.classList.remove('selected'));
@@ -766,7 +838,7 @@ async function sendGift(){
   await pushMessage({ id: Date.now()+'-'+Math.random().toString(36).slice(2), sender: myRole, type:'gift', giftEmoji:selectedGift, ts: Date.now() });
   closeModal('modal-gift');
 }
-
+ 
 async function handlePhoto(evt){
   const file = evt.target.files[0];
   if(!file) return;
@@ -794,7 +866,7 @@ async function handlePhoto(evt){
   reader.readAsDataURL(file);
   evt.target.value='';
 }
-
+ 
 /* ---- voice notes ---- */
 async function toggleVoiceRecording(){
   const btn = document.getElementById('btn-voice');
@@ -840,7 +912,7 @@ async function handleVoiceBlob(blob){
   };
   reader.readAsDataURL(blob);
 }
-
+ 
 /* ---- video ---- */
 function openVideoModal(){ document.getElementById('modal-video').classList.add('active'); }
 async function startVideoRecording(){
@@ -893,7 +965,7 @@ async function handleVideoBlob(blob){
   };
   reader.readAsDataURL(blob);
 }
-
+ 
 /* ---- typing ---- */
 function handleTyping(){
   setTyping(true);
@@ -920,7 +992,7 @@ async function refreshTyping(){
     el.textContent='';
   }
 }
-
+ 
 /* ---- seen ---- */
 async function markSeen(){
   if(!messages.length) return;
@@ -934,7 +1006,7 @@ async function refreshSeen(){
   seenStatus = res ? JSON.parse(res.value) : {};
   renderMessages();
 }
-
+ 
 /* ---- love meter ---- */
 async function refreshLoveMeter(){
   const res = await safeGet('lovemeter', true);
@@ -951,7 +1023,7 @@ async function changeLove(delta){
   await safeSet('lovemeter', String(val), true);
   refreshLoveMeter();
 }
-
+ 
 /* ---- memory lane ---- */
 async function refreshMemory(){
   const res = await safeGet('memory', true);
@@ -973,7 +1045,7 @@ async function refreshMemory(){
     grid.appendChild(div);
   });
 }
-
+ 
 /* ---- tabs ---- */
 function switchTab(tab){
   document.getElementById('tab-chat').classList.toggle('active', tab==='chat');
@@ -982,18 +1054,18 @@ function switchTab(tab){
   document.getElementById('pane-memory').style.display = tab==='memory' ? 'flex':'none';
   if(tab==='memory') refreshMemory();
 }
-
+ 
 /* ---- theme ---- */
 function toggleTheme(){
   const root = document.getElementById('chat-theme-root');
   const current = root.getAttribute('data-theme');
   root.setAttribute('data-theme', current==='light' ? 'dark' : 'light');
 }
-
+ 
 /* ---- settings modal ---- */
 function openSettings(){ document.getElementById('modal-settings').classList.add('active'); }
 function closeModal(id){ document.getElementById(id).classList.remove('active'); }
-
+ 
 /* ---- export ---- */
 function exportChat(){ window.print(); }
 </script>
