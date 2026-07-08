@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -306,7 +305,7 @@
       <div class="link-row"><input readonly id="boyLink"><button onclick="copyLink('boyLink')">Copy</button></div>
       <button class="primary-btn" style="margin-top:14px;" onclick="goToChat()">Open Our Chat →</button>
     </div>
-    <p class="privacy-note">🔒 This chat is 100% private between you two. No one else can enter without your secret code.</p>
+    <p class="privacy-note">🔒 This chat is 100% private between you two. No one else can enter without your secret code. Each link skips the username/password screen — open your own link and go straight into the same live chat, no password shown or asked again.</p>
   </div>
 </div>
 
@@ -494,23 +493,28 @@ async function goToChat(){
 function roomKeyMeta(){ return 'couple-meta:' + room.secretCode; }
 function roomKeyMsgs(){ return 'couple-messages:' + room.secretCode; }
 
-async function loadRoom(){
+async function loadRoom(createIfMissing){
+  if(createIfMissing === undefined) createIfMissing = true;
+  let metaExisted = false;
   try{
     const meta = await window.storage.get(roomKeyMeta(), true);
     if(meta && meta.value){
+      metaExisted = true;
       const data = JSON.parse(meta.value);
       room.girlName = data.girlName || room.girlName;
       room.boyName = data.boyName || room.boyName;
       loveMeter = typeof data.loveMeter === 'number' ? data.loveMeter : 50;
-    } else {
+    } else if(createIfMissing){
       await saveMeta();
     }
-  }catch(e){ await saveMeta(); }
+  }catch(e){ if(createIfMissing) await saveMeta(); }
 
   try{
     const msgs = await window.storage.get(roomKeyMsgs(), true);
     messages = (msgs && msgs.value) ? JSON.parse(msgs.value) : [];
   }catch(e){ messages = []; }
+
+  return metaExisted;
 }
 
 async function saveMeta(){
@@ -547,7 +551,7 @@ function startPolling(){
         }
       }
     }catch(e){}
-  }, 4000);
+  }, 2000);
 }
 
 /* ================= RENDER ================= */
@@ -791,18 +795,41 @@ function exportChat(){
   window.print();
 }
 
-/* ================= DEEP LINK (role/room from URL hash) ================= */
-(function checkHash(){
+/* ================= DEEP LINK (role/room from URL hash) =================
+   A Boy link / Girl link already contains the secret code + role, so it
+   acts as the private key by itself. Opening one skips the username/password
+   screen entirely and drops straight into the shared chat — both links read
+   and write the same room, so a message sent from either one appears on both. */
+async function tryDeepLink(){
   const hash = location.hash;
-  if(hash.includes('room=')){
-    const params = new URLSearchParams(hash.replace('#',''));
-    const code = params.get('room');
-    const role = params.get('role');
-    if(code) document.getElementById('secretCode').value = decodeURIComponent(code);
-    if(role) pickRole(role);
+  if(!hash.includes('room=')) return false;
+  const params = new URLSearchParams(hash.replace('#',''));
+  const code = params.get('room');
+  const role = params.get('role');
+  if(!code || !role) return false;
+
+  myRole = role;
+  room = { girlName:'', boyName:'', secretCode: decodeURIComponent(code) };
+
+  const metaExisted = await loadRoom(false);
+
+  if(metaExisted){
+    // Room already set up by the other partner — jump straight into chat, no password needed.
+    goToScreen('chat-screen');
+    renderAll();
+    startPolling();
+  } else {
+    // First time this code is used — still need names once, but skip login.
+    document.getElementById('secretCode').value = room.secretCode;
+    pickRole(role);
+    goToScreen('setup-screen');
   }
-})();
+  return true;
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  tryDeepLink();
+});
 </script>
 </body>
 </html>
- 
