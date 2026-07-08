@@ -196,7 +196,6 @@
   .bubble.him{ background:linear-gradient(135deg, var(--cream-deep), var(--gold-soft)); color:var(--espresso); border-bottom-left-radius:6px; }
   .bubble.lovenote{ font-family:'Playfair Display',serif; font-size:17px; font-style:italic; border:1.5px dashed var(--gold); }
   .bubble.gift{ text-align:center; font-size:26px; }
-  .bubble.song{ font-family:'Poppins',sans-serif; font-size:13px; }
   .bubble img{ max-width:100%; border-radius:12px; margin-top:4px; display:block; }
   .star-btn{ position:absolute; top:-8px; right:-8px; background:var(--white); border-radius:50%; width:22px; height:22px; font-size:11px; box-shadow:0 2px 6px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; }
   .bubble-row:hover .star-btn{ opacity:1; }
@@ -313,7 +312,7 @@
 <div id="chat-screen" class="screen">
   <div class="topbar">
     <div class="names">
-      <h3 id="coupleTitle">💕</h3>
+      <h3 id="coupleTitle" onclick="renameCouple()" style="cursor:pointer;" title="Tap to rename">💕</h3>
       <span class="badge">Only Us</span>
     </div>
     <div class="top-actions">
@@ -344,7 +343,6 @@
     <div class="quick-row">
       <button onclick="openLoveNote()">💌 Love Note</button>
       <button onclick="triggerPhoto()">📸 Photo</button>
-      <button onclick="openSong()">🎵 Song</button>
       <button onclick="sendKiss()">💋 Quick Kiss</button>
       <button onclick="openGift()">🎁 Gift</button>
     </div>
@@ -364,17 +362,6 @@
     <div class="modal-actions">
       <button class="cancel" onclick="closeModal('loveNoteModal')">Cancel</button>
       <button class="confirm" onclick="sendLoveNote()">Send 💕</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="songModal">
-  <div class="modal-card">
-    <h3>🎵 Share a Song</h3>
-    <input type="text" id="songText" placeholder="Song name / link">
-    <div class="modal-actions">
-      <button class="cancel" onclick="closeModal('songModal')">Cancel</button>
-      <button class="confirm" onclick="sendSong()">Share 🎶</button>
     </div>
   </div>
 </div>
@@ -554,7 +541,18 @@ function startPolling(){
   }, 2000);
 }
 
-/* ================= RENDER ================= */
+function renameCouple(){
+  const girl = prompt("Her name:", room.girlName) ;
+  if(girl === null) return;
+  const boy = prompt("His name:", room.boyName);
+  if(boy === null) return;
+  room.girlName = girl.trim() || room.girlName;
+  room.boyName = boy.trim() || room.boyName;
+  saveMeta();
+  document.getElementById('coupleTitle').textContent = room.girlName + ' 💕 ' + room.boyName;
+  renderChat();
+  renderMemory();
+}
 function renderAll(){
   document.getElementById('coupleTitle').textContent = room.girlName + ' 💕 ' + room.boyName;
   document.getElementById('dailyPrompt').textContent = PROMPTS[new Date().getDate() % PROMPTS.length];
@@ -607,7 +605,7 @@ function buildBubble(m, idx){
   const row = document.createElement('div');
   row.className = 'bubble-row ' + m.who;
   const bubble = document.createElement('div');
-  bubble.className = 'bubble ' + m.who + (m.type==='lovenote'?' lovenote':'') + (m.type==='gift'?' gift':'') + (m.type==='song'?' song':'');
+  bubble.className = 'bubble ' + m.who + (m.type==='lovenote'?' lovenote':'') + (m.type==='gift'?' gift':'');
   const senderName = m.who === 'her' ? room.girlName : room.boyName;
 
   let inner = '<span class="sender">'+senderName+'</span>';
@@ -615,8 +613,6 @@ function buildBubble(m, idx){
     inner += escapeHtml(m.text);
   } else if(m.type === 'photo'){
     inner += '<img src="'+m.data+'" alt="shared photo">';
-  } else if(m.type === 'song'){
-    inner += '🎵 <b>'+escapeHtml(m.text)+'</b>';
   } else if(m.type === 'kiss'){
     inner += '💋';
   } else if(m.type === 'gift'){
@@ -706,15 +702,6 @@ function sendLoveNote(){
   pushMessage({type:'lovenote', text:t});
   document.getElementById('loveNoteText').value = '';
   closeModal('loveNoteModal');
-}
-
-function openSong(){ document.getElementById('songModal').classList.add('show'); }
-function sendSong(){
-  const t = document.getElementById('songText').value.trim();
-  if(!t) return;
-  pushMessage({type:'song', text:t});
-  document.getElementById('songText').value = '';
-  closeModal('songModal');
 }
 
 function openGift(){ document.getElementById('giftModal').classList.add('show'); }
@@ -809,21 +796,13 @@ async function tryDeepLink(){
   if(!code || !role) return false;
 
   myRole = role;
-  room = { girlName:'', boyName:'', secretCode: decodeURIComponent(code) };
+  room = { girlName:'She', boyName:'He', secretCode: decodeURIComponent(code) };
 
-  const metaExisted = await loadRoom(false);
+  await loadRoom(true); // creates the room with default names if it doesn't exist yet
 
-  if(metaExisted){
-    // Room already set up by the other partner — jump straight into chat, no password needed.
-    goToScreen('chat-screen');
-    renderAll();
-    startPolling();
-  } else {
-    // First time this code is used — still need names once, but skip login.
-    document.getElementById('secretCode').value = room.secretCode;
-    pickRole(role);
-    goToScreen('setup-screen');
-  }
+  goToScreen('chat-screen');
+  renderAll();
+  startPolling();
   return true;
 }
 
