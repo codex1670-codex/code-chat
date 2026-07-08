@@ -919,7 +919,7 @@ function triggerVideo(){ document.getElementById('videoInput').click(); }
 function handleVideo(e){
   const file = e.target.files[0];
   if(!file) return;
-  if(file.size > 8*1024*1024){ alert('Please choose a video under 8MB 💗 (short clips work best)'); return; }
+  if(file.size > 50*1024*1024){ alert('Please choose a video under 20MB 💗 (short clips work best)'); return; }
   const reader = new FileReader();
   reader.onload = ()=>{ pushMessage({type:'video', data: reader.result}); };
   reader.readAsDataURL(file);
