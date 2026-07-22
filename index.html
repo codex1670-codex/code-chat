@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>website</title>
+    <title>app</title>
     <style>
       body{
             background:linear-gradient(to right ,lightskyblue,deeppink);
@@ -39,11 +39,12 @@
             border: none;
             color: #fff;
             cursor: pointer;
-            position: relative;
-           
+
             z-index: 0;
             border-radius: 12px;
             display: flex;
+            position:relative;
+            top:10px;
         }
         .tnb::after{
             content: "";
@@ -99,14 +100,16 @@
 
         }
         .popup {
-            position: absolute;
+            position: fixed;
             z-index: 2;
             background:linear-gradient(to right ,darkviolet,skyblue);
             color: black;
             width: 40%;
+            max-width: 500px;
             padding: 5%;
-            margin-left: 300px;
-            margin-top: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             border-radius: 10px;
              font-family: "Lucinda Grande", "Lucinda Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
            text-align: left;
@@ -114,6 +117,63 @@
             font-size: larger;
 display: none;
 
+        }
+
+        .videos video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ---- Mobile responsive overrides ---- */
+        @media (max-width: 768px) {
+            .tnb {
+                margin-left: 10px;
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+            .videos {
+                flex-direction: column;
+                align-items: center;
+            }
+            .videos > div {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .videos video {
+                width: 100%;
+                max-width: 350px;
+                height: auto;
+            }
+            .popup {
+                width: 90%;
+                padding: 6%;
+                font-size: 1rem;
+            }
+            .tit h1 {
+                font-size: 1.5rem;
+            }
+            .tit p, .h4 {
+                font-size: 0.9rem;
+                padding: 0 10px;
+            }
+            /* close button inside popup was pinned with left:600px inline style,
+               which pushed it off-screen on phones. This overrides it. */
+            .popup .tnb {
+                left: auto !important;
+                top: 10px !important;
+                right: 10px;
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .videos video {
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
         }
 
 </style>
@@ -137,7 +197,7 @@ display: none;
         <p>100% safe and protected</p>
     </div>
     <div>
-        <button  class="tnb" onclick="f()" style="left:600px ;top: 80px">close</button>
+        <button  class="tnb" onclick="f()">close</button>
     </div>
 </div>
 <div class="overlay"></div>
@@ -156,45 +216,45 @@ display: none;
         <div class="videos">
             <div>
                 <h1>This is for advertise your shop :</h1>
-                <video  loop autoplay muted playsinline  src="Timmer_21-22-04.mp4" type="video/mp4" style="width: 800px; height: 800px; ">this is for advertise your shop</video>
+                <video  loop autoplay muted playsinline  src="Timmer_21-22-04.mp4" type="video/mp4">this is for advertise your shop</video>
            </div>
             <div  >
                 <h1 >This is for proposal :</h1>
-                <video loop autoplay muted playsinline  src="Timmer_19-40-02.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+                <video loop autoplay muted playsinline  src="Timmer_19-40-02.mp4" type="video/mp4"></video>
             </div>
             <div >
                 <h1 >For birthday wishes :</h1>
-                 <video loop autoplay muted playsinline  src="Timmer_09-26-36.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+                 <video loop autoplay muted playsinline  src="Timmer_09-26-36.mp4" type="video/mp4"></video>
             </div>
             <div >
                 <h1 >Just a code thing to ad your shop on website :</h1>
-                 <video loop autoplay muted playsinline  src="Timmer_18-13-44.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+                 <video loop autoplay muted playsinline  src="Timmer_18-13-44.mp4" type="video/mp4"></video>
             </div>
             <div >
                 <h1>To your lover  :</h1>
-                 <video loop autoplay muted playsinline  src="Timmer_19-40-02.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+                 <video loop autoplay muted playsinline  src="Timmer_19-40-02.mp4" type="video/mp4"></video>
             </div>
             <div  >
                 <h1>Birthday wishes on website</h1>
-                <video loop autoplay muted playsinline  src="Timmer_13-00-34.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+                <video loop autoplay muted playsinline  src="Timmer_13-00-34.mp4" type="video/mp4"></video>
             </div>
 
 
             <div >
                 <h1>Ad your shop with 3D effect website :</h1>
-                <video loop autoplay muted playsinline  src="Timmer_15-57-14.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+                <video loop autoplay muted playsinline  src="Timmer_15-57-14.mp4" type="video/mp4"></video>
             </div>
             <div>
                 <h1>Ad your shop in 3D animation effect :</h1>
-               <video loop autoplay muted playsinline  src="Timmer_18-13-44.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+               <video loop autoplay muted playsinline  src="Timmer_18-13-44.mp4" type="video/mp4"></video>
             </div>
             <div>
                 <h1>Ad your shop with 3D zooming effect :</h1>
-               <video loop autoplay muted playsinline  src="Timmer_18-14-19.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+               <video loop autoplay muted playsinline  src="Timmer_18-14-19.mp4" type="video/mp4"></video>
             </div>
             <div>
                 <h1>Your private chatting platform :</h1>
-              <video loop autoplay muted playsinline  src="Timmer_20-24-13.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+              <video loop autoplay muted playsinline  src="Timmer_20-24-13.mp4" type="video/mp4"></video>
             </div>
 
         </div>
@@ -226,20 +286,3 @@ display: none;
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
