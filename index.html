@@ -1,1207 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>code-x chat 💕</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Quicksand:wght@400;500;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --cream:#FFF8F0;
-    --cream-deep:#F6E9D8;
-    --blush:#F4C6D7;
-    --rose:#E8A0BF;
-    --deep-pink:#D6537A;
-    --gold:#C9A227;
-    --gold-soft:#E4C976;
-    --espresso:#2B2118;
-    --espresso-soft:#4A392C;
-    --white:#FFFFFF;
-    --shadow: 0 10px 30px rgba(43,33,24,0.12);
-    --radius: 22px;
-  }
-  [data-theme="dark"]{
-    --cream:#241A1E;
-    --cream-deep:#2E2024;
-    --blush:#3A2530;
-    --rose:#B96E8E;
-    --deep-pink:#F17FA1;
-    --gold:#D9BB6A;
-    --gold-soft:#8A7546;
-    --espresso:#F6E9D8;
-    --espresso-soft:#D8C7B4;
-    --white:#2B2024;
-    --shadow: 0 10px 30px rgba(0,0,0,0.4);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;height:100%;}
-  body{
-    font-family:'Quicksand', sans-serif;
-    background:var(--cream);
-    color:var(--espresso);
-    overflow-x:hidden;
-    transition:background .4s ease, color .4s ease;
-  }
-  .screen{ display:none; min-height:100vh; }
-  .screen.active{ display:flex; flex-direction:column; }
-  h1,h2,h3{ font-family:'Playfair Display', serif; margin:0; }
-  button{ font-family:'Quicksand', sans-serif; cursor:pointer; border:none; }
-  input, textarea, select{ font-family:'Quicksand', sans-serif; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>website</title>
+    <style>
+      body{
+            background:linear-gradient(to right ,lightskyblue,deeppink);
+        }
+        .tit{
+            font-family: "Lucinda Grande", "Lucinda Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            justify-content: center;
+            color: white;
+            font-size: larger;
+           border: solid 5px;
+            text-align: center;
+        }
+        .videos  {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            position: relative;
+            top:10px;
 
-  /* ---------- LOGIN ---------- */
-  #login-screen{
-    position:relative;
-    align-items:center; justify-content:center;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(244,198,215,0.9), transparent 40%),
-      radial-gradient(circle at 80% 30%, rgba(201,162,39,0.25), transparent 45%),
-      radial-gradient(circle at 50% 85%, rgba(232,160,191,0.6), transparent 50%),
-      linear-gradient(160deg, #FFF8F0 0%, #FBE7ED 45%, #F6E4D3 100%);
-  }
-  .float-hearts{ position:absolute; inset:0; overflow:hidden; pointer-events:none; perspective:1000px; }
-  .float-hearts span{
-    position:absolute; bottom:-10%; opacity:.55;
-    transform-style:preserve-3d;
-    animation: floatUp3d linear infinite;
-  }
-  @keyframes floatUp3d{
-    0%{ transform:translateY(0) translateZ(-200px) rotateY(0deg) rotateX(0deg); opacity:0; }
-    12%{ opacity:.6; }
-    50%{ transform:translateY(-55vh) translateZ(80px) rotateY(180deg) rotateX(25deg); }
-    88%{ opacity:.5; }
-    100%{ transform:translateY(-110vh) translateZ(-200px) rotateY(360deg) rotateX(0deg); opacity:0; }
-  }
-  .scene3d{
-    position:fixed; inset:0; overflow:hidden; perspective:1200px; pointer-events:none; z-index:0;
-  }
-  .scene3d span{
-    position:absolute; transform-style:preserve-3d;
-    animation: driftSpin3d linear infinite;
-  }
-  @keyframes driftSpin3d{
-    0%{ transform:translate3d(0,0,-150px) rotateY(0deg) rotateX(0deg); }
-    50%{ transform:translate3d(10px,-18px,120px) rotateY(180deg) rotateX(30deg); }
-    100%{ transform:translate3d(0,0,-150px) rotateY(360deg) rotateX(0deg); }
-  }
-  .login-card{
-    position:relative; z-index:2;
-    background:rgba(255,255,255,0.72);
-    backdrop-filter:blur(14px);
-    border:1px solid rgba(255,255,255,0.6);
-    border-radius:28px;
-    padding:48px 40px;
-    width:min(90vw, 400px);
-    text-align:center;
-    box-shadow:var(--shadow);
-  }
-  .login-card .seal{
-    width:64px; height:64px; margin:0 auto 18px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 70%);
-    display:flex; align-items:center; justify-content:center;
-    font-size:28px; color:var(--white);
-    box-shadow:0 6px 18px rgba(201,162,39,0.5);
-  }
-  .login-card h1{ font-size:26px; color:var(--deep-pink); letter-spacing:.3px; }
-  .login-card p.tag{ font-family:'Poppins',sans-serif; font-size:12.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--espresso-soft); margin-top:6px; }
-  .field{ text-align:left; margin-top:20px; }
-  .field label{ font-size:12.5px; font-weight:600; color:var(--espresso-soft); }
-  .field input{
-    width:100%; margin-top:6px; padding:12px 14px; border-radius:14px;
-    border:1.5px solid rgba(43,33,24,0.12); background:var(--white); font-size:15px; color:var(--espresso);
-    outline:none; transition:border .2s;
-  }
-  .field input:focus{ border-color:var(--deep-pink); }
-  .primary-btn{
-    margin-top:26px; width:100%; padding:14px; border-radius:16px;
-    background:linear-gradient(135deg, var(--deep-pink), var(--rose));
-    color:#fff; font-weight:700; font-size:15px; letter-spacing:.3px;
-    box-shadow:0 8px 20px rgba(214,83,122,0.35);
-    transition:transform .15s ease;
-  }
-  .primary-btn:active{ transform:scale(.97); }
-  .error-msg{ color:#B4374B; font-size:13px; margin-top:14px; min-height:16px; font-weight:600; }
-  .shake{ animation:shake .4s; }
-  @keyframes shake{ 20%,60%{transform:translateX(-8px);} 40%,80%{transform:translateX(8px);} 100%{transform:translateX(0);} }
+        }
+        h1{
+            font-family: cursive;
+        }
+        .h4{
+            color:black;
+        }
+        .tnb {
+           margin-left:100px;
+           flex-wrap: wrap;
 
-  /* ---------- SETUP ---------- */
-  #setup-screen{
-    align-items:center; justify-content:center;
-    background:linear-gradient(160deg, #FFF8F0, #F6E4D3);
-    padding:30px 16px;
-  }
-  .setup-card{
-    background:var(--white); border-radius:28px; padding:40px 34px; width:min(92vw,460px);
-    box-shadow:var(--shadow); text-align:center;
-  }
-  .setup-card h2{ color:var(--deep-pink); font-size:24px; }
-  .setup-card .sub{ font-family:'Poppins',sans-serif; font-size:13px; color:var(--espresso-soft); margin-top:6px; }
-  .two-col{ display:flex; gap:12px; }
-  .two-col .field{ flex:1; }
-  .role-pick{ display:flex; gap:10px; margin-top:18px; }
-  .role-pick button{
-    flex:1; padding:12px; border-radius:14px; border:1.5px solid rgba(43,33,24,0.12);
-    background:var(--cream); font-weight:600; color:var(--espresso-soft); font-size:14px;
-    transition:all .15s;
-  }
-  .role-pick button.selected{
-    background:linear-gradient(135deg,var(--deep-pink),var(--rose)); color:#fff; border-color:transparent;
-  }
-  .link-box{
-    margin-top:22px; background:var(--cream-deep); border-radius:14px; padding:14px; text-align:left;
-    font-family:'Poppins',sans-serif; font-size:12px; display:none;
-  }
-  .link-box.show{ display:block; }
-  .link-row{ display:flex; align-items:center; gap:8px; margin-top:8px; }
-  .link-row input{ flex:1; border:1px solid rgba(43,33,24,0.12); border-radius:8px; padding:8px; background:#fff; font-size:11.5px; }
-  .link-row button{ padding:8px 10px; border-radius:8px; background:var(--gold); color:#fff; font-size:11px; font-weight:600; }
-  .privacy-note{ margin-top:18px; font-size:11.5px; color:var(--espresso-soft); font-family:'Poppins',sans-serif; }
+            padding: 15px 40px;
+            outline: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 12px;
+            display: flex;
+        }
+        .tnb::after{
+            content: "";
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #333;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
 
-  /* ---------- CHAT ---------- */
-  #chat-screen{ height:100vh; }
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 18px; background:var(--white); box-shadow:0 2px 10px rgba(43,33,24,0.06);
-    z-index:5;
-  }
-  .topbar .names{ display:flex; align-items:center; gap:10px; }
-  .topbar .names h3{ font-size:16px; color:var(--deep-pink); line-height:1.2; }
-  .presence{ font-size:11px; color:#3AA65A; font-family:'Poppins',sans-serif; font-weight:600; }
-  .presence.offline{ color:var(--espresso-soft); font-weight:500; }
-  .avatar-stack{ display:flex; }
-  .mini-avatar{
-    width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:15px; border:2px solid var(--white); box-shadow:0 1px 4px rgba(0,0,0,0.15);
-  }
-  .mini-avatar.her{ background:linear-gradient(135deg,var(--blush),var(--rose)); }
-  .mini-avatar.him{ background:linear-gradient(135deg,var(--cream-deep),var(--gold-soft)); margin-left:-10px; }
-  .badge{
-    background:linear-gradient(135deg,var(--gold-soft),var(--gold)); color:#fff; font-size:10.5px;
-    padding:3px 10px; border-radius:20px; font-weight:700; letter-spacing:.5px; font-family:'Poppins',sans-serif;
-  }
-  .icon-btn{
-    background:var(--cream-deep); width:36px; height:36px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--espresso-soft);
-  }
-  .icon-btn img.avatar-img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
-  .avatar-circle{
-    width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
-    font-size:11px; font-weight:700; color:#fff; vertical-align:middle; margin-right:6px; overflow:hidden; flex-shrink:0;
-  }
-  .avatar-circle img{ width:100%; height:100%; object-fit:cover; }
-  .sender-row{ display:flex; align-items:center; margin-bottom:4px; }
-  .top-actions{ display:flex; gap:8px; }
+        }
+        .tnb::before{
+            content: "";
+            background: linear-gradient(45deg ,palevioletred,lightskyblue,deepskyblue,royalblue,palevioletred,violet,mediumpurple,skyblue);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 600%;
+            z-index: -1;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            filter: blur(8px);
+            animation: glow 20s linear infinite ;
+            transition: opacity .3s ease-in-out;
+            border-radius: 10px;
+            opacity: 1;
+        }
+        @keyframes glow {
+            0%{background-position: 0 0;}
+            50%{background-position: 400% 0;}
+            100% {background-position: 0 0;}
+        }
+        .tnb:hover::before{
+            opacity: 1;
+        }
+        .tnb:hover::after{
+            background: transparent;
+            opacity: 10;
+        }
 
-  .prompt-bar{
-    background:linear-gradient(135deg, var(--blush), var(--cream-deep));
-    padding:10px 18px; font-size:12.5px; font-family:'Poppins',sans-serif; color:var(--espresso-soft);
-    display:flex; align-items:center; gap:8px;
-  }
-  .prompt-bar b{ color:var(--deep-pink); font-family:'Quicksand',sans-serif; }
+        .overlay{
+            background-color: black;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            opacity: 0.5;
+            z-index: 1;
+            display: none;
 
-  .tabs{ display:flex; background:var(--white); border-bottom:1px solid rgba(43,33,24,0.06); }
-  .tabs button{ flex:1; padding:10px; background:none; font-size:12.5px; font-weight:700; color:var(--espresso-soft); border-bottom:2.5px solid transparent; font-family:'Poppins',sans-serif; }
-  .tabs button.active{ color:var(--deep-pink); border-color:var(--deep-pink); }
+        }
+        .popup {
+            position: absolute;
+            z-index: 2;
+            background:linear-gradient(to right ,darkviolet,skyblue);
+            color: black;
+            width: 40%;
+            padding: 5%;
+            margin-left: 300px;
+            margin-top: 300px;
+            border-radius: 10px;
+             font-family: "Lucinda Grande", "Lucinda Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+           text-align: left;
+            justify-content: left;
+            font-size: larger;
+display: none;
 
-  .love-meter-bar{ display:flex; align-items:center; gap:10px; padding:10px 18px; background:var(--white); font-size:12px; font-family:'Poppins',sans-serif; }
-  .meter-track{ flex:1; height:9px; border-radius:6px; background:var(--cream-deep); overflow:hidden; }
-  .meter-fill{ height:100%; background:linear-gradient(90deg,var(--rose),var(--deep-pink)); transition:width .4s; }
-  .love-meter-bar button{ width:24px; height:24px; border-radius:50%; background:var(--cream-deep); font-size:14px; color:var(--deep-pink); }
+        }
 
-  #chat-screen{ background:linear-gradient(180deg, var(--cream) 0%, var(--cream-deep) 100%); }
-  #view-chat{ position:relative; z-index:1; flex:1; overflow-y:auto; padding:18px; background:rgba(255,248,240,0.55); }
-  [data-theme="dark"] #view-chat{ background:rgba(36,26,30,0.6); }
-  #view-memory{ flex:1; overflow-y:auto; padding:18px; background:var(--cream); display:none; }
-  .date-sep{ text-align:center; margin:16px 0; }
-  .date-sep span{ background:var(--cream-deep); padding:4px 14px; border-radius:20px; font-size:11px; font-family:'Poppins',sans-serif; color:var(--espresso-soft); }
-
-  .bubble-row{ display:flex; margin-bottom:12px; }
-  .bubble-row.grouped{ margin-bottom:3px; }
-  .bubble-row.her{ justify-content:flex-end; }
-  .bubble-row.him{ justify-content:flex-start; }
-  .bubble{
-    max-width:72%; padding:12px 16px; border-radius:20px; font-size:14.5px; line-height:1.45; position:relative;
-    box-shadow:0 2px 8px rgba(43,33,24,0.06);
-  }
-  .reaction-badge{
-    position:absolute; bottom:-10px; background:var(--white); border-radius:50%; width:22px; height:22px;
-    display:flex; align-items:center; justify-content:center; font-size:12px; box-shadow:0 2px 5px rgba(0,0,0,0.15);
-  }
-  .bubble-row.her .reaction-badge{ left:-6px; }
-  .bubble-row.him .reaction-badge{ right:-6px; }
-  .bubble .sender{ font-size:10.5px; font-weight:700; font-family:'Poppins',sans-serif; opacity:.6; margin-bottom:3px; display:block; }
-  .bubble .time{ display:block; font-size:9.5px; opacity:.55; margin-top:4px; text-align:right; font-family:'Poppins',sans-serif; }
-  .bubble.her{ background:linear-gradient(135deg, var(--blush), var(--rose)); color:var(--espresso); border-bottom-right-radius:6px; }
-  .bubble.him{ background:linear-gradient(135deg, var(--cream-deep), var(--gold-soft)); color:var(--espresso); border-bottom-left-radius:6px; }
-  .bubble.lovenote{ font-family:'Playfair Display',serif; font-size:17px; font-style:italic; border:1.5px dashed var(--gold); }
-  .bubble.gift{ text-align:center; font-size:26px; }
-  .bubble img{ max-width:100%; border-radius:12px; margin-top:4px; display:block; }
-  .bubble video{ max-width:100%; border-radius:12px; margin-top:4px; display:block; }
-  .star-btn{ position:absolute; top:-8px; right:-8px; background:var(--white); border-radius:50%; width:22px; height:22px; font-size:11px; box-shadow:0 2px 6px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; }
-  .bubble-row:hover .star-btn{ opacity:1; }
-  .star-btn.starred{ opacity:1; color:var(--gold); }
-
-  .memory-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .memory-item{ background:var(--white); border-radius:16px; padding:12px; box-shadow:0 2px 8px rgba(43,33,24,0.06); font-size:12.5px; }
-  .memory-item img{ width:100%; border-radius:10px; margin-bottom:6px; }
-  .empty-note{ text-align:center; color:var(--espresso-soft); font-family:'Poppins',sans-serif; font-size:13px; margin-top:40px; }
-
-  .typing-indicator{ padding:4px 18px; font-size:12px; font-style:italic; color:var(--espresso-soft); font-family:'Poppins',sans-serif; background:var(--cream); }
-
-  .input-area{ background:var(--white); padding:12px 16px 16px; border-top:1px solid rgba(43,33,24,0.06); }
-  .typing-indicator{
-    height:0; overflow:hidden; font-size:12px; font-family:'Poppins',sans-serif; color:var(--deep-pink);
-    display:flex; align-items:center; gap:6px; transition:height .2s ease, margin .2s ease;
-  }
-  .typing-indicator.show{ height:20px; margin-bottom:6px; }
-  .typing-dots span{ display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--deep-pink); margin-right:3px; animation:dotPulse 1.2s infinite; }
-  .typing-dots span:nth-child(2){ animation-delay:.2s; }
-  .typing-dots span:nth-child(3){ animation-delay:.4s; }
-  @keyframes dotPulse{ 0%,60%,100%{ opacity:.3; transform:translateY(0); } 30%{ opacity:1; transform:translateY(-3px); } }
-  .seen-tag{ display:block; font-size:9px; opacity:.6; margin-top:2px; text-align:right; font-family:'Poppins',sans-serif; }
-  .quick-row{ display:flex; gap:8px; margin-bottom:10px; overflow-x:auto; }
-  .quick-row button{
-    flex-shrink:0; display:flex; align-items:center; gap:5px; background:var(--cream-deep); padding:7px 12px;
-    border-radius:20px; font-size:12px; font-weight:600; color:var(--espresso-soft); font-family:'Poppins',sans-serif;
-  }
-  .send-row{ display:flex; align-items:flex-end; gap:10px; }
-  .send-row textarea{
-    flex:1; resize:none; border:1.5px solid rgba(43,33,24,0.12); border-radius:18px; padding:12px 16px;
-    font-size:14.5px; max-height:100px; background:var(--cream); color:var(--espresso); outline:none;
-  }
-  .send-row textarea:focus{ border-color:var(--deep-pink); }
-  .send-btn{
-    width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--deep-pink),var(--rose));
-    color:#fff; font-size:19px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    box-shadow:0 6px 16px rgba(214,83,122,0.4);
-  }
-
-  .gift-burst{ position:fixed; font-size:40px; pointer-events:none; z-index:50; animation:burst 1s ease-out forwards; }
-  @keyframes burst{ 0%{ transform:translateY(0) scale(0.5); opacity:1; } 100%{ transform:translateY(-160px) scale(1.4); opacity:0; } }
-
-  .modal-bg{ position:fixed; inset:0; background:rgba(43,33,24,0.4); display:none; align-items:center; justify-content:center; z-index:40; padding:20px; }
-  .modal-bg.show{ display:flex; }
-  .modal-card{ background:var(--white); border-radius:20px; padding:26px; width:min(90vw,360px); text-align:center; }
-  .modal-card h3{ color:var(--deep-pink); font-size:18px; margin-bottom:10px; }
-  .modal-card input, .modal-card textarea{ width:100%; padding:10px 12px; border-radius:12px; border:1.5px solid rgba(43,33,24,0.12); font-size:14px; margin-top:10px; background:var(--cream); color:var(--espresso); }
-  .modal-actions{ display:flex; gap:10px; margin-top:16px; }
-  .modal-actions button{ flex:1; padding:10px; border-radius:12px; font-weight:700; font-size:13px; }
-  .modal-actions .cancel{ background:var(--cream-deep); color:var(--espresso-soft); }
-  .modal-actions .confirm{ background:linear-gradient(135deg,var(--deep-pink),var(--rose)); color:#fff; }
-
-  .profile-tilt-wrap{ perspective:600px; margin-top:16px; display:flex; justify-content:center; }
-  .profile-tilt{
-    width:120px; height:120px; border-radius:50%;
-    background:linear-gradient(135deg, var(--rose), var(--gold-soft));
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 16px 30px rgba(214,83,122,0.35);
-    transform:rotateY(-12deg) rotateX(6deg);
-    transition:transform .3s ease;
-    animation:tiltFloat 4s ease-in-out infinite;
-  }
-  @keyframes tiltFloat{
-    0%,100%{ transform:rotateY(-12deg) rotateX(6deg) translateY(0); }
-    50%{ transform:rotateY(12deg) rotateX(-6deg) translateY(-6px); }
-  }
-  .profile-avatar-preview{
-    width:112px; height:112px; border-radius:50%; overflow:hidden;
-    display:flex; align-items:center; justify-content:center; font-size:44px; background:var(--white);
-  }
-  .profile-avatar-preview img{ width:100%; height:100%; object-fit:cover; }
-
-  ::-webkit-scrollbar{ width:6px; }
-  ::-webkit-scrollbar-thumb{ background:var(--rose); border-radius:6px; }
-
-  @media print{
-    #login-screen,#setup-screen,.topbar,.prompt-bar,.tabs,.love-meter-bar,.input-area{ display:none !important; }
-    #view-memory{ display:none !important; }
-    #view-chat{ display:block !important; overflow:visible; height:auto; }
-    body{ background:#fff; }
-  }
 </style>
 </head>
 <body>
+<div>
 
-<!-- ================= LOGIN SCREEN ================= -->
-<div id="login-screen" class="screen active">
-  <div class="float-hearts" id="floatHearts"></div>
-  <div class="login-card">
-    <div class="seal">💕</div>
-    <h1>Our Secret Heart</h1>
-    <p class="tag">Only Yours 💕</p>
-    <div class="field">
-      <label>Username</label>
-      <input type="text" id="loginUser" placeholder="Enter username" autocomplete="off">
+
+
+
+<div class="popup">
+    <div>
+        <h1>This my website :</h1><br>
+        <a href="https://codex1670-codex.github.io/codex-propo/#meera-6caiop=JTdCJTIybjElMjIlM0ElMjJBcmp1biUyMiUyQyUyMm4yJTIyJTNBJTIybWVlcmElMjIlMkMlMjJjJTIyJTNBJTIyaSUyMGxvdmUlMjB1JTIwZGklMjIlN0Q=">love proposal</a><br>
+        <a href="https://codex1670-codex.github.io/code-add/?gist=f72d1f36aefad9294aef6d15af137b26">3D animation ad</a><br>
+          <a href="https://codex1670-codex.github.io/orbit-appstore-mrnaecz9/?gist=6ede3ae426de32672538a4801bad531b">website for promote</a><br>
+        <a href="https://codex1670-codex.github.io/code-shop/?gist=6497bd0dc70b2504d5a3db33d43aa293">3D effect ad</a><br>
+
+        <a href="https://codex1670-codex.github.io/code-app-store/?code=7P5TFT">app store :remove the code and insert 123456789 :</a><br>
+        <p>If you want to create a website for your shop,proposal,wishes just meg on instagram :</p><a href="https://www.instagram.com/rocky_1029x/">rocky_1029x</a>
+        <p>100% safe and protected</p>
     </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Enter password">
+    <div>
+        <button  class="tnb" onclick="f()" style="left:600px ;top: 80px">close</button>
     </div>
-    <button class="primary-btn" id="loginBtn">Unlock Our World 🔐</button>
-    <div class="error-msg" id="loginError"></div>
-  </div>
 </div>
+<div class="overlay"></div>
 
-<!-- ================= SETUP SCREEN ================= -->
-<div id="setup-screen" class="screen">
-  <div class="setup-card">
-    <h2>Enter Our Private World</h2>
-    <p class="sub">Tell us who you two are 💫</p>
-    <div class="two-col">
-      <div class="field avatar-field">
-        <label>Girl's Name</label>
-        <input type="text" id="girlName" placeholder="e.g. Priya">
-        <div class="avatar-picker" onclick="document.getElementById('girlPhotoInput').click()">
-          <img id="girlPhotoPreview" class="avatar-preview" style="display:none;" alt="">
-          <span id="girlPhotoPlaceholder">👸 Add photo</span>
+
+    <button  class="tnb" onclick="show()" style="margin-left:0px "> See</button>
+    <div>
+
+        <div class="tit">
+            <h1>code-x</h1>
+            <p>if you want any customized webstie to prmote your shop or any others on links </p>
+            <p>just contact on <a href="https://www.instagram.com/rocky_1029x/?__pwa=1">rocky_1029x</a></p>
+            <h4 class="h4">100% safe and protected <!--<button class="tnb" style="margin-right: 900px; margin-top: 50px">see</button>--></h4><br>
+
         </div>
-        <input type="file" id="girlPhotoInput" accept="image/*" style="display:none" onchange="handleSetupPhoto(event,'girl')">
-      </div>
-      <div class="field avatar-field">
-        <label>Boy's Name</label>
-        <input type="text" id="boyName" placeholder="e.g. Arjun">
-        <div class="avatar-picker" onclick="document.getElementById('boyPhotoInput').click()">
-          <img id="boyPhotoPreview" class="avatar-preview" style="display:none;" alt="">
-          <span id="boyPhotoPlaceholder">🤴 Add photo</span>
+        <div class="videos">
+            <div>
+                <h1>This is for advertise your shop :</h1>
+                <video  loop autoplay muted playsinline  src="Timmer_21-22-04.mp4" type="video/mp4" style="width: 800px; height: 800px; ">this is for advertise your shop</video>
+           </div>
+            <div  >
+                <h1 >This is for proposal :</h1>
+                <video loop autoplay muted playsinline  src="Timmer_19-40-02.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div >
+                <h1 >For birthday wishes :</h1>
+                 <video loop autoplay muted playsinline  src="Timmer_09-26-36.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div >
+                <h1 >Just a code thing to ad your shop on website :</h1>
+                 <video loop autoplay muted playsinline  src="Timmer_18-13-44.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div >
+                <h1>Ad your shop on website :</h1>
+                 <video loop autoplay muted playsinline  src="Timmer_18-14-19.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div  >
+                <h1>Birthday wishes on website</h1>
+                <video loop autoplay muted playsinline  src="Timmer_13-00-34.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+
+
+            <div >
+                <h1>Ad your shop with 3D effect website :</h1>
+                <video loop autoplay muted playsinline  src="Timmer_15-57-14.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div>
+                <h1>Ad your shop in 3D animation effect :</h1>
+               <video loop autoplay muted playsinline  src="Timmer_18-13-44.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div>
+                <h1>Ad your shop with 3D zooming effect :</h1>
+               <video loop autoplay muted playsinline  src="Timmer_18-14-19.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+            <div>
+                <h1>Your private chatting platform :</h1>
+              <video loop autoplay muted playsinline  src="Timmer_20-24-13.mp4" type="video/mp4" style="width: 800px; height: 800px;"></video>
+            </div>
+
         </div>
-        <input type="file" id="boyPhotoInput" accept="image/*" style="display:none" onchange="handleSetupPhoto(event,'boy')">
-      </div>
-    </div>
-    <div class="field">
-      <label>Secret Code (your private room key)</label>
-      <input type="text" id="secretCode" placeholder="e.g. ourlove2026" value="ourlove2026">
-    </div>
-    <div class="field">
-      <label>Who are you?</label>
-      <div class="role-pick">
-        <button type="button" id="pickGirl" onclick="pickRole('her')">She 👸</button>
-        <button type="button" id="pickBoy" onclick="pickRole('him')">He 🤴</button>
-      </div>
-    </div>
-    <button class="primary-btn" id="enterBtn">Generate Our Private Links 💌</button>
-    <div class="link-box" id="linkBox">
-      <div><b>💗 Girl Link</b></div>
-      <div class="link-row"><input readonly id="girlLink"><button onclick="copyLink('girlLink')">Copy</button></div>
-      <div style="margin-top:10px;"><b>💛 Boy Link</b></div>
-      <div class="link-row"><input readonly id="boyLink"><button onclick="copyLink('boyLink')">Copy</button></div>
-      <button class="primary-btn" style="margin-top:14px;" onclick="goToChat()">Open Our Chat →</button>
-    </div>
-    <p class="privacy-note">🔒 This chat is 100% private between you two. No one else can enter without your secret code. Each link skips the username/password screen — open your own link and go straight into the same live chat, no password shown or asked again.</p>
-  </div>
+
+
+        <h1 style="text-align: center">if you want to see my web ! </h1>
+
+
+
 </div>
-
-<!-- ================= CHAT SCREEN ================= -->
-<div id="chat-screen" class="screen">
-  <div class="scene3d" id="chatScene3d"></div>
-  <div class="topbar">
-    <div class="names">
-      <div class="avatar-stack"><span class="mini-avatar her">👸</span><span class="mini-avatar him">🤴</span></div>
-      <div>
-        <h3 id="coupleTitle" onclick="renameCouple()" style="cursor:pointer;" title="Tap to rename">💕</h3>
-        <div class="presence" id="presenceText">· · ·</div>
-      </div>
-      <span class="badge">Only Us</span>
-    </div>
-    <div class="top-actions">
-      <button class="icon-btn" title="Edit your profile" onclick="openProfile()" id="profileBtn" style="overflow:hidden; padding:0;">👤</button>
-      <button class="icon-btn" title="Toggle music" onclick="toggleMusic()" id="musicBtn">🎵</button>
-      <button class="icon-btn" title="Toggle theme" onclick="toggleTheme()" id="themeBtn">🌙</button>
-      <button class="icon-btn" title="Export chat" onclick="exportChat()">⬇️</button>
-    </div>
-  </div>
-
-  <div class="prompt-bar">💭 <b>Today's Question:</b> <span id="dailyPrompt"></span></div>
-
-  <div class="love-meter-bar">
-    <span>💗 Love Meter</span>
-    <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
-    <button onclick="changeMeter(-5)">−</button>
-    <button onclick="changeMeter(5)">+</button>
-  </div>
-
-  <div class="tabs">
-    <button class="active" id="tabChatBtn" onclick="switchTab('chat')">💬 Chat</button>
-    <button id="tabMemBtn" onclick="switchTab('memory')">📸 Memory Lane</button>
-  </div>
-
-  <div id="view-chat"></div>
-  <div id="view-memory"><div class="memory-grid" id="memoryGrid"></div></div>
-
-  <div class="input-area" id="inputArea">
-    <div class="typing-indicator" id="typingIndicator"></div>
-    <div class="quick-row">
-      <button onclick="openLoveNote()">💌 Love Note</button>
-      <button onclick="triggerPhoto()">📸 Photo</button>
-      <button onclick="triggerVideo()">🎥 Video</button>
-      <button onclick="sendKiss()">💖 share love</button>
-      <button onclick="openGift()">🎁 Gift</button>
-    </div>
-    <div class="send-row">
-      <textarea id="msgInput" placeholder="Say something sweet..." rows="1"></textarea>
-      <button class="send-btn" onclick="sendMessage()">💗</button>
-    </div>
-    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(event)">
-    <input type="file" id="videoInput" accept="video/*" style="display:none" onchange="handleVideo(event)">
-  </div>
 </div>
-
-<!-- ================= MODALS ================= -->
-<div class="modal-bg" id="loveNoteModal">
-  <div class="modal-card">
-    <h3>💌 Write a Love Note</h3>
-    <textarea id="loveNoteText" rows="4" placeholder="Pour your heart out..."></textarea>
-    <div class="modal-actions">
-      <button class="cancel" onclick="closeModal('loveNoteModal')">Cancel</button>
-      <button class="confirm" onclick="sendLoveNote()">Send 💕</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="giftModal">
-  <div class="modal-card">
-    <h3>🎁 Send a Virtual Gift</h3>
-    <div style="display:flex; gap:10px; margin-top:14px; justify-content:center; font-size:30px;">
-      <button onclick="sendGift('🌹')">🌹</button>
-      <button onclick="sendGift('🧸')">🧸</button>
-      <button onclick="sendGift('👑')">👑</button>
-      <button onclick="sendGift('💍')">💍</button>
-      <button onclick="sendGift('🍫')">🍫</button>
-    </div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="closeModal('giftModal')" style="width:100%">Close</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="profileModal">
-  <div class="modal-card">
-    <h3>💕 Your Profile</h3>
-    <div class="profile-tilt-wrap">
-      <div class="profile-tilt" id="profileTilt">
-        <div class="profile-avatar-preview" id="profileAvatarPreview">💗</div>
-      </div>
-    </div>
-    <button class="primary-btn" style="margin-top:8px;" onclick="document.getElementById('avatarInput').click()">📸 Choose Photo from Gallery</button>
-    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
-    <input type="text" id="profileNameInput" placeholder="Your display name" style="margin-top:14px;">
-    <div class="modal-actions">
-      <button class="cancel" onclick="closeModal('profileModal')">Cancel</button>
-      <button class="confirm" onclick="saveProfile()">Save 💕</button>
-    </div>
-  </div>
-</div>
-
 <script>
-/* ================= CONFIG ================= */
-const VALID_USER = "code-x";
-const VALID_PASS = "sanjiv";
-const PROMPTS = [
-  "What made you smile today because of me?",
-  "What's your favorite memory of us so far?",
-  "If we could teleport anywhere right now, where would we go?",
-  "What's one tiny thing I do that makes you happy?",
-  "Describe today in three words.",
-  "What are you most excited about for us?",
-  "What song reminds you of me today?"
-];
-
-/* ================= STORAGE ABSTRACTION =================
-   Inside Claude.ai, window.storage is a real persistent, shared backend —
-   that's the primary path and what makes two different Claude.ai users'
-   tabs sync. If this file is downloaded and opened directly in a browser
-   (double-click / file://), window.storage doesn't exist there, so we
-   fall back to localStorage, which still lets two tabs of the SAME file
-   on the SAME computer/browser sync with each other (since our 1s polling
-   just re-reads it). This fallback does NOT sync across different devices
-   — for that, host the file online (e.g. GitHub Pages) so both people open
-   the same real URL. */
-const hasCloudStorage = (typeof window.storage !== 'undefined' && window.storage !== null);
-
-async function storageGet(key, shared){
-  if(hasCloudStorage) return window.storage.get(key, shared);
-  const raw = localStorage.getItem(key);
-  if(raw === null){ const e = new Error('not found'); throw e; }
-  return { key, value: raw, shared };
-}
-
-async function storageSet(key, value, shared){
-  if(hasCloudStorage) return window.storage.set(key, value, shared);
-  localStorage.setItem(key, value);
-  return { key, value, shared };
-}
-
-let room = null;          // {girlName, boyName, secretCode}
-let myRole = null;        // 'her' | 'him'
-let messages = [];
-let loveMeter = 50;
-let currentTab = 'chat';
-let musicOn = false;
-let audioCtx = null, musicNodes = [];
-let pollTimer = null;
-
-/* ================= FLOATING HEARTS BG ================= */
-function build3dScene(containerId, count, opts){
-  opts = opts || {};
-  const wrap = document.getElementById(containerId);
-  if(!wrap) return;
-  const glyphs = opts.glyphs || ['💗','💕','💖','💞','🌹'];
-  const sizeMin = opts.sizeMin || 16, sizeMax = opts.sizeMax || 36;
-  const durMin = opts.durMin || 10, durMax = opts.durMax || 18;
-  const opacity = opts.opacity || 0.5;
-  for(let i=0;i<count;i++){
-    const s = document.createElement('span');
-    s.textContent = glyphs[i % glyphs.length];
-    s.style.left = Math.random()*100+'%';
-    s.style.top = Math.random()*100+'%';
-    s.style.fontSize = (sizeMin + Math.random()*(sizeMax-sizeMin))+'px';
-    s.style.opacity = opacity;
-    s.style.animationDuration = (durMin + Math.random()*(durMax-durMin))+'s';
-    s.style.animationDelay = (Math.random()*10)+'s';
-    wrap.appendChild(s);
-  }
-}
-
-build3dScene('floatHearts', 16, { glyphs:['💗','💕','💖','💞'], sizeMin:16, sizeMax:26, opacity:0.55 });
-build3dScene('chatScene3d', 14, { glyphs:['💗','💕','🌹','💞'], sizeMin:14, sizeMax:28, opacity:0.16, durMin:14, durMax:24 });
-
-/* ================= LOGIN ================= */
-document.getElementById('loginBtn').addEventListener('click', doLogin);
-document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-
-function doLogin(){
-  const u = document.getElementById('loginUser').value.trim();
-  const p = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginError');
-  if(u === VALID_USER && p === VALID_PASS){
-    err.textContent = '';
-    goToScreen('setup-screen');
-  } else {
-    err.textContent = 'Incorrect username or password. Try again 💔';
-    const card = document.querySelector('.login-card');
-    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-  }
-}
-
-function goToScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-/* ================= SETUP ================= */
-function pickRole(role){
-  myRole = role;
-  document.getElementById('pickGirl').classList.toggle('selected', role==='her');
-  document.getElementById('pickBoy').classList.toggle('selected', role==='him');
-}
-
-document.getElementById('enterBtn').addEventListener('click', ()=>{
-  const girl = document.getElementById('girlName').value.trim() || 'She';
-  const boy = document.getElementById('boyName').value.trim() || 'He';
-  const code = document.getElementById('secretCode').value.trim() || 'ourlove2026';
-  if(!myRole){ alert('Please choose who you are — She or He 💗'); return; }
-  room = { girlName: girl, boyName: boy, secretCode: code, avatarHer:null, avatarHim:null };
-  const base = location.href.split('#')[0];
-  document.getElementById('girlLink').value = base + '#room=' + encodeURIComponent(code) + '&role=her';
-  document.getElementById('boyLink').value = base + '#room=' + encodeURIComponent(code) + '&role=him';
-  document.getElementById('linkBox').classList.add('show');
-});
-
-function copyLink(id){
-  const el = document.getElementById(id);
-  el.select(); el.setSelectionRange(0,999);
-  try{ document.execCommand('copy'); }catch(e){}
-  navigator.clipboard && navigator.clipboard.writeText(el.value).catch(()=>{});
-}
-
-async function goToChat(){
-  await loadRoom();
-  await loadLive();
-  goToScreen('chat-screen');
-  renderAll();
-  markSeen();
-  updatePresenceUI();
-  startPolling();
-}
-
-/* ================= STORAGE HELPERS ================= */
-function roomKeyMeta(){ return 'couple-meta:' + room.secretCode; }
-function roomKeyMsgs(){ return 'couple-messages:' + room.secretCode; }
-function roomKeyLive(){ return 'couple-live:' + room.secretCode; }
-
-let live = { typingHer:0, typingHim:0, seenHer:0, seenHim:0 };
-let lastSeenSaveAt = 0;
-let typingIdleTimer = null;
-
-function otherRole(){ return myRole === 'her' ? 'him' : 'her'; }
-function cap(r){ return r === 'her' ? 'Her' : 'Him'; }
-
-async function loadLive(){
-  try{
-    const res = await storageGet(roomKeyLive(), true);
-    if(res && res.value) live = Object.assign(live, JSON.parse(res.value));
-  }catch(e){ /* no live state yet, defaults are fine */ }
-}
-
-async function saveLive(){
-  try{ await storageSet(roomKeyLive(), JSON.stringify(live), true); }
-  catch(e){ console.error('live save failed', e); }
-}
-
-function onTyping(){
-  live['typing' + cap(myRole)] = Date.now();
-  saveLive();
-  clearTimeout(typingIdleTimer);
-  typingIdleTimer = setTimeout(()=>{
-    live['typing' + cap(myRole)] = 0;
-    saveLive();
-  }, 2500);
-}
-
-function markSeen(){
-  const now = Date.now();
-  if(now - lastSeenSaveAt < 1000) return;
-  lastSeenSaveAt = now;
-  live['seen' + cap(myRole)] = now;
-  saveLive();
-}
-
-function updateTypingIndicatorUI(){
-  const el = document.getElementById('typingIndicator');
-  const otherTs = live['typing' + cap(otherRole())] || 0;
-  const active = (Date.now() - otherTs) < 3000;
-  if(active){
-    const name = otherRole() === 'her' ? room.girlName : room.boyName;
-    el.innerHTML = name + ' is typing <span class="typing-dots"><span></span><span></span><span></span></span>';
-    el.classList.add('show');
-  } else {
-    el.classList.remove('show');
-  }
-}
-
-function updatePresenceUI(){
-  const el = document.getElementById('presenceText');
-  if(!el) return;
-  const otherTs = live['seen' + cap(otherRole())] || 0;
-  if(!otherTs){
-    el.textContent = 'Say hello 👋';
-    el.classList.add('offline');
-    return;
-  }
-  const diff = Date.now() - otherTs;
-  if(diff < 15000){
-    el.textContent = '🟢 Active now';
-    el.classList.remove('offline');
-  } else {
-    const mins = Math.floor(diff / 60000);
-    let label;
-    if(mins < 1) label = 'Active just now';
-    else if(mins < 60) label = 'Active ' + mins + 'm ago';
-    else label = 'Active ' + Math.floor(mins / 60) + 'h ago';
-    el.textContent = label;
-    el.classList.add('offline');
-  }
-}
+    var overlay = document.querySelector(".overlay")
+    var popbeox =document.querySelector(".popup")
 
 
-async function loadRoom(createIfMissing){
-  if(createIfMissing === undefined) createIfMissing = true;
-  let metaExisted = false;
-  try{
-    const meta = await storageGet(roomKeyMeta(), true);
-    if(meta && meta.value){
-      metaExisted = true;
-      const data = JSON.parse(meta.value);
-      room.girlName = data.girlName || room.girlName;
-      room.boyName = data.boyName || room.boyName;
-      room.avatarHer = data.avatarHer || null;
-      room.avatarHim = data.avatarHim || null;
-      loveMeter = typeof data.loveMeter === 'number' ? data.loveMeter : 50;
-    } else if(createIfMissing){
-      await saveMeta();
+    function show() {
+        popbeox.style.display="block"
+        overlay.style.display="block"
+
     }
-  }catch(e){ if(createIfMissing) await saveMeta(); }
+    function f() {
 
-  try{
-    const msgs = await storageGet(roomKeyMsgs(), true);
-    messages = (msgs && msgs.value) ? JSON.parse(msgs.value) : [];
-  }catch(e){ messages = []; }
-
-  return metaExisted;
-}
-
-async function saveMeta(){
-  try{
-    await storageSet(roomKeyMeta(), JSON.stringify({
-      girlName: room.girlName, boyName: room.boyName, loveMeter,
-      avatarHer: room.avatarHer || null, avatarHim: room.avatarHim || null
-    }), true);
-  }catch(e){ console.error('meta save failed', e); }
-}
-
-async function saveMessages(){
-  try{
-    await storageSet(roomKeyMsgs(), JSON.stringify(messages), true);
-  }catch(e){ console.error('messages save failed', e); }
-}
-
-function startPolling(){
-  if(pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(async ()=>{
-    try{
-      const msgs = await storageGet(roomKeyMsgs(), true);
-      const fresh = (msgs && msgs.value) ? JSON.parse(msgs.value) : [];
-      if(fresh.length !== messages.length){
-        messages = fresh;
-        renderChat();
-        renderMemory();
-      }
-      const meta = await storageGet(roomKeyMeta(), true);
-      if(meta && meta.value){
-        const d = JSON.parse(meta.value);
-        if(typeof d.loveMeter === 'number' && d.loveMeter !== loveMeter){
-          loveMeter = d.loveMeter;
-          updateMeterUI();
-        }
-        if(d.avatarHer !== room.avatarHer || d.avatarHim !== room.avatarHim || d.girlName !== room.girlName || d.boyName !== room.boyName){
-          room.avatarHer = d.avatarHer || null;
-          room.avatarHim = d.avatarHim || null;
-          room.girlName = d.girlName || room.girlName;
-          room.boyName = d.boyName || room.boyName;
-          document.getElementById('coupleTitle').textContent = room.girlName + ' 💕 ' + room.boyName;
-          updateProfileButtonIcon();
-          renderChat();
-          renderMemory();
-        }
-      }
-      await loadLive();
-      updateTypingIndicatorUI();
-      updatePresenceUI();
-      markSeen();
-      renderChat(); // refresh seen-tag on own last message
-    }catch(e){}
-  }, 1000);
-}
-
-function renameCouple(){
-  const girl = prompt("Her name:", room.girlName) ;
-  if(girl === null) return;
-  const boy = prompt("His name:", room.boyName);
-  if(boy === null) return;
-  room.girlName = girl.trim() || room.girlName;
-  room.boyName = boy.trim() || room.boyName;
-  saveMeta();
-  document.getElementById('coupleTitle').textContent = room.girlName + ' 💕 ' + room.boyName;
-  renderChat();
-  renderMemory();
-}
-function renderAll(){
-  document.getElementById('coupleTitle').textContent = room.girlName + ' 💕 ' + room.boyName;
-  document.getElementById('dailyPrompt').textContent = PROMPTS[new Date().getDate() % PROMPTS.length];
-  updateMeterUI();
-  updateProfileButtonIcon();
-  renderChat();
-  renderMemory();
-}
-
-function updateMeterUI(){
-  document.getElementById('meterFill').style.width = Math.max(0,Math.min(100,loveMeter)) + '%';
-}
-
-function fmtTime(ts){
-  const d = new Date(ts);
-  return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-}
-function dateLabel(ts){
-  const d = new Date(ts);
-  const today = new Date();
-  const yest = new Date(); yest.setDate(today.getDate()-1);
-  const sameDay = (a,b)=> a.toDateString()===b.toDateString();
-  if(sameDay(d,today)) return 'Today';
-  if(sameDay(d,yest)) return 'Yesterday';
-  return d.toLocaleDateString([], {day:'numeric', month:'short', year:'numeric'});
-}
-
-function renderChat(){
-  const wrap = document.getElementById('view-chat');
-  wrap.innerHTML = '';
-  if(messages.length === 0){
-    wrap.innerHTML = '<div class="empty-note">No messages yet. Say hello to your special someone 💗</div>';
-    return;
-  }
-  let lastMineIdx = -1;
-  messages.forEach((m,i)=>{ if(m.who === myRole) lastMineIdx = i; });
-  let lastDate = null;
-  messages.forEach((m, idx)=>{
-    const lbl = dateLabel(m.ts);
-    let dateChanged = false;
-    if(lbl !== lastDate){
-      lastDate = lbl;
-      dateChanged = true;
-      const sep = document.createElement('div');
-      sep.className = 'date-sep';
-      sep.innerHTML = '<span>'+lbl+'</span>';
-      wrap.appendChild(sep);
+        popbeox.style.display="none"
+        overlay.style.display="none"
     }
-    const prev = messages[idx-1];
-    const grouped = !dateChanged && prev && prev.who === m.who && (m.ts - prev.ts) < 2*60*1000;
-    wrap.appendChild(buildBubble(m, idx, idx === lastMineIdx, grouped));
-  });
-  wrap.scrollTop = wrap.scrollHeight;
-}
 
-function toggleReaction(idx){
-  messages[idx].reaction = messages[idx].reaction === 'heart' ? null : 'heart';
-  saveMessages();
-  renderChat();
-  renderMemory();
-}
 
-function buildBubble(m, idx, showSeen, grouped){
-  const row = document.createElement('div');
-  row.className = 'bubble-row ' + m.who + (grouped ? ' grouped' : '');
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble ' + m.who + (m.type==='lovenote'?' lovenote':'') + (m.type==='gift'?' gift':'');
-  bubble.style.cursor = 'pointer';
-  const senderName = m.who === 'her' ? room.girlName : room.boyName;
-  const senderAvatar = m.who === 'her' ? room.avatarHer : room.avatarHim;
-
-  let inner = '';
-  if(!grouped){
-    inner += '<span class="sender-row">' + avatarHtml(senderAvatar, senderName) + '<span class="sender">'+senderName+'</span></span>';
-  }
-  if(m.type === 'text' || m.type === 'lovenote'){
-    inner += escapeHtml(m.text);
-  } else if(m.type === 'photo'){
-    inner += '<img src="'+m.data+'" alt="shared photo">';
-  } else if(m.type === 'video'){
-    inner += '<video src="'+m.data+'" controls playsinline></video>';
-  } else if(m.type === 'kiss'){
-    inner += '💋';
-  } else if(m.type === 'gift'){
-    inner += m.emoji;
-  }
-  inner += '<span class="time">'+fmtTime(m.ts)+'</span>';
-  if(showSeen){
-    const otherSeenTs = live['seen' + cap(otherRole())] || 0;
-    if(otherSeenTs >= m.ts){
-      const otherName = otherRole() === 'her' ? room.girlName : room.boyName;
-      inner += '<span class="seen-tag">Seen by '+otherName+'</span>';
-    } else {
-      inner += '<span class="seen-tag">Sent</span>';
-    }
-  }
-  bubble.innerHTML = inner;
-  bubble.ondblclick = ()=> toggleReaction(idx);
-  bubble.title = 'Double-tap to like 💗';
-
-  if(m.reaction === 'heart'){
-    const badge = document.createElement('span');
-    badge.className = 'reaction-badge';
-    badge.textContent = '❤️';
-    bubble.appendChild(badge);
-  }
-
-  const star = document.createElement('button');
-  star.className = 'star-btn' + (m.starred ? ' starred' : '');
-  star.textContent = m.starred ? '★' : '☆';
-  star.onclick = (e)=>{ e.stopPropagation(); toggleStar(idx); };
-  bubble.appendChild(star);
-
-  row.appendChild(bubble);
-  return row;
-}
-
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-function renderMemory(){
-  const grid = document.getElementById('memoryGrid');
-  const special = messages.filter(m=> m.starred || m.type==='photo' || m.type==='video');
-  if(special.length===0){
-    grid.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">Star messages or share photos & videos to save them here 📸</div>';
-    return;
-  }
-  grid.innerHTML = '';
-  special.forEach(m=>{
-    const item = document.createElement('div');
-    item.className = 'memory-item';
-    const senderName = m.who === 'her' ? room.girlName : room.boyName;
-    let content = '';
-    if(m.type === 'photo') content += '<img src="'+m.data+'">';
-    if(m.type === 'video') content += '<video src="'+m.data+'" controls playsinline style="width:100%;border-radius:10px;margin-bottom:6px;"></video>';
-    const label = m.type==='photo' ? '📸 Photo' : m.type==='video' ? '🎥 Video' : escapeHtml(m.text||m.emoji||'');
-    content += '<b>'+senderName+'</b><br>' + label + '<br><small>'+dateLabel(m.ts)+' · '+fmtTime(m.ts)+'</small>';
-    item.innerHTML = content;
-    grid.appendChild(item);
-  });
-}
-
-function avatarHtml(dataUrl, name){
-  if(dataUrl){
-    return '<span class="avatar-circle"><img src="'+dataUrl+'" alt=""></span>';
-  }
-  const initial = (name || '?').trim().charAt(0).toUpperCase() || '?';
-  const bg = name === room.girlName ? 'linear-gradient(135deg,var(--rose),var(--deep-pink))' : 'linear-gradient(135deg,var(--gold-soft),var(--gold))';
-  return '<span class="avatar-circle" style="background:'+bg+';">'+initial+'</span>';
-}
-
-function updateProfileButtonIcon(){
-  const btn = document.getElementById('profileBtn');
-  if(!btn) return;
-  const myAvatar = myRole === 'her' ? room.avatarHer : room.avatarHim;
-  if(myAvatar){
-    btn.innerHTML = '<img class="avatar-img" src="'+myAvatar+'" alt="Your profile">';
-  } else {
-    btn.textContent = '👤';
-  }
-}
-
-function openProfile(){
-  const myName = myRole === 'her' ? room.girlName : room.boyName;
-  const myAvatar = myRole === 'her' ? room.avatarHer : room.avatarHim;
-  document.getElementById('profileNameInput').value = myName;
-  const preview = document.getElementById('profileAvatarPreview');
-  preview.innerHTML = myAvatar ? '<img src="'+myAvatar+'" alt="">' : '💗';
-  preview.dataset.pending = '';
-  document.getElementById('profileModal').classList.add('show');
-}
-
-function resizeImageToDataUrl(file, maxSize){
-  return new Promise((resolve, reject)=>{
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      const img = new Image();
-      img.onload = ()=>{
-        const canvas = document.createElement('canvas');
-        const side = Math.min(img.width, img.height);
-        const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
-        canvas.width = maxSize; canvas.height = maxSize;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, sx, sy, side, side, 0, 0, maxSize, maxSize);
-        resolve(canvas.toDataURL('image/jpeg', 0.85));
-      };
-      img.onerror = reject;
-      img.src = reader.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-async function handleAvatarUpload(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  if(file.size > 8*1024*1024){ alert('Please choose a smaller photo (under 8MB) 💗'); return; }
-  try{
-    const dataUrl = await resizeImageToDataUrl(file, 220); // cropped square, resized small so it stores/syncs fast
-    document.getElementById('profileAvatarPreview').innerHTML = '<img src="'+dataUrl+'" alt="">';
-    document.getElementById('profileAvatarPreview').dataset.pending = dataUrl;
-  }catch(err){
-    alert('Could not read that photo, please try another 💗');
-  }
-  e.target.value = '';
-}
-
-async function saveProfile(){
-  const name = document.getElementById('profileNameInput').value.trim();
-  const pending = document.getElementById('profileAvatarPreview').dataset.pending;
-  if(myRole === 'her'){
-    if(name) room.girlName = name;
-    if(pending) room.avatarHer = pending;
-  } else {
-    if(name) room.boyName = name;
-    if(pending) room.avatarHim = pending;
-  }
-  await saveMeta();
-  document.getElementById('profileAvatarPreview').dataset.pending = '';
-  document.getElementById('coupleTitle').textContent = room.girlName + ' 💕 ' + room.boyName;
-  updateProfileButtonIcon();
-  renderChat();
-  renderMemory();
-  closeModal('profileModal');
-}
-
-function toggleStar(idx){
-  messages[idx].starred = !messages[idx].starred;
-  saveMessages();
-  renderChat();
-  renderMemory();
-}
-
-/* ================= TABS ================= */
-function switchTab(tab){
-  currentTab = tab;
-  document.getElementById('tabChatBtn').classList.toggle('active', tab==='chat');
-  document.getElementById('tabMemBtn').classList.toggle('active', tab==='memory');
-  document.getElementById('view-chat').style.display = tab==='chat' ? 'block' : 'none';
-  document.getElementById('view-memory').style.display = tab==='memory' ? 'block' : 'none';
-  document.getElementById('inputArea').style.display = tab==='chat' ? 'block' : 'none';
-}
-
-/* ================= MESSAGE ACTIONS ================= */
-async function pushMessage(msg){
-  const newMsg = Object.assign({who: myRole, ts: Date.now(), starred:false}, msg);
-  // Pull the freshest history first so a message sent from the other link
-  // at nearly the same moment never gets overwritten (last-write-wins safety).
-  try{
-    const latest = await storageGet(roomKeyMsgs(), true);
-    messages = (latest && latest.value) ? JSON.parse(latest.value) : messages;
-  }catch(e){ /* keep local copy if fetch fails */ }
-  messages.push(newMsg);
-  await saveMessages();
-  renderChat();
-  renderMemory();
-}
-
-function sendMessage(){
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
-  if(!text) return;
-  pushMessage({type:'text', text});
-  input.value = '';
-  clearTimeout(typingIdleTimer);
-  live['typing' + cap(myRole)] = 0;
-  saveLive();
-}
-document.getElementById('msgInput').addEventListener('keydown', e=>{
-  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
-});
-document.getElementById('msgInput').addEventListener('input', onTyping);
-
-function sendKiss(){ pushMessage({type:'kiss'}); burst('💋'); }
-
-function openLoveNote(){ document.getElementById('loveNoteModal').classList.add('show'); }
-function sendLoveNote(){
-  const t = document.getElementById('loveNoteText').value.trim();
-  if(!t) return;
-  pushMessage({type:'lovenote', text:t});
-  document.getElementById('loveNoteText').value = '';
-  closeModal('loveNoteModal');
-}
-
-function openGift(){ document.getElementById('giftModal').classList.add('show'); }
-function sendGift(emoji){
-  pushMessage({type:'gift', emoji});
-  burst(emoji);
-  closeModal('giftModal');
-}
-
-function triggerPhoto(){ document.getElementById('photoInput').click(); }
-function handlePhoto(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  if(file.size > 3*1024*1024){ alert('Please choose a photo under 3MB 💗'); return; }
-  const reader = new FileReader();
-  reader.onload = ()=>{ pushMessage({type:'photo', data: reader.result}); };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-function triggerVideo(){ document.getElementById('videoInput').click(); }
-function handleVideo(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  if(file.size > 8*1024*1024){ alert('Please choose a video under 8MB 💗 (short clips work best)'); return; }
-  const reader = new FileReader();
-  reader.onload = ()=>{ pushMessage({type:'video', data: reader.result}); };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-
-function burst(emoji){
-  const el = document.createElement('div');
-  el.className = 'gift-burst';
-  el.textContent = emoji;
-  el.style.left = (40 + Math.random()*20) + 'vw';
-  el.style.top = '70vh';
-  document.body.appendChild(el);
-  setTimeout(()=> el.remove(), 1000);
-}
-
-/* ================= LOVE METER ================= */
-function changeMeter(delta){
-  loveMeter = Math.max(0, Math.min(100, loveMeter + delta));
-  updateMeterUI();
-  saveMeta();
-}
-
-/* ================= THEME ================= */
-function toggleTheme(){
-  const isDark = document.body.getAttribute('data-theme') === 'dark';
-  document.body.setAttribute('data-theme', isDark ? '' : 'dark');
-  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
-}
-
-/* ================= AMBIENT MUSIC (Web Audio, no external files) ================= */
-function toggleMusic(){
-  musicOn = !musicOn;
-  document.getElementById('musicBtn').textContent = musicOn ? '🔈' : '🎵';
-  if(musicOn){ startAmbient(); } else { stopAmbient(); }
-}
-function startAmbient(){
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  const notes = [261.6, 329.6, 392.0, 493.9]; // soft piano-ish chord tones
-  notes.forEach((freq,i)=>{
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    gain.gain.value = 0;
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start();
-    gain.gain.linearRampToValueAtTime(0.015, audioCtx.currentTime + 1.5 + i*0.3);
-    musicNodes.push({osc, gain});
-  });
-}
-function stopAmbient(){
-  musicNodes.forEach(n=>{
-    n.gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.6);
-    setTimeout(()=>{ try{n.osc.stop();}catch(e){} }, 700);
-  });
-  musicNodes = [];
-}
-
-/* ================= EXPORT ================= */
-function exportChat(){
-  window.print();
-}
-
-/* ================= DEEP LINK (role/room from URL hash) =================
-   A Boy link / Girl link already contains the secret code + role, so it
-   acts as the private key by itself. Opening one skips the username/password
-   screen entirely and drops straight into the shared chat — both links read
-   and write the same room, so a message sent from either one appears on both. */
-async function tryDeepLink(){
-  const hash = location.hash;
-  if(!hash.includes('room=')) return false;
-  const params = new URLSearchParams(hash.replace('#',''));
-  const code = params.get('room');
-  const role = params.get('role');
-  if(!code || !role) return false;
-
-  myRole = role;
-  room = { girlName:'She', boyName:'He', secretCode: decodeURIComponent(code), avatarHer:null, avatarHim:null };
-
-  await loadRoom(true); // creates the room with default names if it doesn't exist yet
-  await loadLive();
-
-  goToScreen('chat-screen');
-  renderAll();
-  markSeen();
-  updatePresenceUI();
-  startPolling();
-  return true;
-}
-
-window.addEventListener('DOMContentLoaded', ()=>{
-  tryDeepLink();
-});
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
