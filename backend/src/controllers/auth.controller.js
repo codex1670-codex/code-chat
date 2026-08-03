@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
             const newUser = new User({
                 fullName,
                 email,
-                password: password,
+                password: hashedPassword,
             });
 
             if(newUser) {
