@@ -51,9 +51,23 @@ function ChatContainer() {
                   }`}
                 >
                   {msg.image && (
-                    <img src={msg.image} alt="Shared" className="rounded-lg h-48 object-cover" />
+                    <img
+                      src={msg.image}
+                      alt="Shared"
+                      className="rounded-lg h-48 object-cover"
+                    />
                   )}
+
+                  {msg.video && (
+                    <video
+                      src={msg.video}
+                      controls
+                      className="rounded-lg max-h-64 mt-2 w-full"
+                    />
+                  )}
+
                   {msg.text && <p className="mt-2">{msg.text}</p>}
+
                   <p className="text-xs mt-1 opacity-75 flex items-center gap-1">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
