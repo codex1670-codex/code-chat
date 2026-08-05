@@ -91,8 +91,13 @@ login: async (data) => {
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
+    const token = localStorage.getItem("token");
+
     const socket = io(BASE_URL, {
-      withCredentials: true, // this ensures cookies are sent with the connection
+      withCredentials: true, 
+      auth: {
+        token: token
+      }
     });
 
     socket.connect();
