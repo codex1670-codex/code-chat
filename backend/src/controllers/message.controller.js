@@ -6,7 +6,10 @@ import User from "../models/User.js";
 export const getAllContacts = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+
+    const filteredUsers = await User.find({
+      _id: { $ne: loggedInUserId },
+    }).select("-password");
 
     res.status(200).json(filteredUsers);
   } catch (error) {
@@ -29,7 +32,7 @@ export const getMessagesByUserId = async (req, res) => {
 
     res.status(200).json(messages);
   } catch (error) {
-    console.log("Error in getMessages controller: ", error.message);
+    console.log("Error in getMessages controller:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -41,21 +44,36 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user._id;
 
     if (!text && !image && !video) {
-      return res.status(400).json({ message: "Text, image, or video is required." });
+      return res
+        .status(400)
+        .json({ message: "Text, image, or video is required." });
     }
+
     if (senderId.equals(receiverId)) {
-      return res.status(400).json({ message: "Cannot send messages to yourself." });
+      return res
+        .status(400)
+        .json({ message: "Cannot send messages to yourself." });
     }
+
     const receiverExists = await User.exists({ _id: receiverId });
+
     if (!receiverExists) {
       return res.status(404).json({ message: "Receiver not found." });
     }
 
     let imageUrl;
     if (image) {
-      // upload base64 image to cloudinary
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
+    }
+
+    let videoUrl;
+    if (video) {
+      const uploadResponse = await cloudinary.uploader.upload(video, {
+        resource_type: "video",
+      });
+
+      videoUrl = uploadResponse.secure_url;
     }
 
     const newMessage = new Message({
@@ -63,34 +81,20 @@ export const sendMessage = async (req, res) => {
       receiverId,
       text,
       image: imageUrl,
+      video: videoUrl,
     });
-
-    let videoUrl;
-if (video) {
-  const uploadResponse = await cloudinary.uploader.upload(video, {
-    resource_type: "video",   // important for video
-  });
-  videoUrl = uploadResponse.secure_url;
-}
-
-const newMessage = new Message({
-  senderId,
-  receiverId,
-  text,
-  image: imageUrl,
-  video: videoUrl,            // ← add this
-});
 
     await newMessage.save();
 
     const receiverSocketId = getReceiverSocketId(receiverId);
+
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error in sendMessage controller: ", error.message);
+    console.log("Error in sendMessage controller:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -99,9 +103,11 @@ export const getChatPartners = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
 
-    // find all the messages where the logged-in user is either sender or receiver
     const messages = await Message.find({
-      $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
+      $or: [
+        { senderId: loggedInUserId },
+        { receiverId: loggedInUserId },
+      ],
     });
 
     const chatPartnerIds = [
@@ -114,11 +120,13 @@ export const getChatPartners = async (req, res) => {
       ),
     ];
 
-    const chatPartners = await User.find({ _id: { $in: chatPartnerIds } }).select("-password");
+    const chatPartners = await User.find({
+      _id: { $in: chatPartnerIds },
+    }).select("-password");
 
     res.status(200).json(chatPartners);
   } catch (error) {
-    console.error("Error in getChatPartners: ", error.message);
+    console.log("Error in getChatPartners:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
