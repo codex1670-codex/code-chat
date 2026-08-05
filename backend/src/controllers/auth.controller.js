@@ -89,7 +89,7 @@ export const login = async (req, res) => {
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
-            token: res.cookie("jwt"),
+            token,
         });
     } catch (error){
         console.error("Error in login controller :", error)
