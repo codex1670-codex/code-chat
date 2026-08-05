@@ -15,7 +15,8 @@ export const protectRoute = async (req, res, next) => {
 
             req.user = user
             next()
-    } catch (error) {
-        console.log("Error in protectRoute:", error)
-    }
+   } catch (error) {
+    console.log("Error in protectRoute:", error);
+    return res.status(401).json({ message: "Unauthorized - Invalid token" });
+   }
 }
