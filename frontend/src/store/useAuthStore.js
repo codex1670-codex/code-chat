@@ -3,9 +3,9 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" 
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000"
 
-: (import.meta.env.VITE_API_URL?.replace("/api", "") || "https://code-chat-l9y5.onrender.com");
+  : (import.meta.env.VITE_API_URL?.replace("/api", "") || "https://code-chat-l9y5.onrender.com");
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -43,26 +43,26 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-login: async (data) => {
-  set({ isLoggingIn: true });
-  try {
-    const res = await axiosInstance.post("/auth/login", data);
-    
-    set({ authUser: res.data });
-    
-    // Token-ah localStorage-la save pannu
-    if (res.data.token) {
-      localStorage.setItem("token", res.data.token);
-    }
+  login: async (data) => {
+    set({ isLoggingIn: true });
+    try {
+      const res = await axiosInstance.post("/auth/login", data);
 
-    toast.success("Logged in successfully");
-    get().connectSocket();
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Login failed");
-  } finally {
-    set({ isLoggingIn: false });
-  }
-},
+      set({ authUser: res.data });
+
+      // Token-ah localStorage-la save pannu
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+
+      toast.success("Logged in successfully");
+      get().connectSocket();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
 
   logout: async () => {
     try {
@@ -88,29 +88,58 @@ login: async (data) => {
   },
 
   connectSocket: () => {
-    const { authUser } = get();
-    if (!authUser || get().socket?.connected) return;
+    const { authUser, socket } = get();
+
+    if (!authUser) return;
+
+    // already connected
+    if (socket && socket.connected) return;
+
+    // disconnect old socket
+    if (socket) {
+      socket.removeAllListeners();
+      socket.disconnect();
+    }
 
     const token = localStorage.getItem("token");
 
-    const socket = io(BASE_URL, {
-      withCredentials: true, 
+    const newSocket = io(BASE_URL, {
       auth: {
-        token: token
-      }
+        token,
+      },
+      withCredentials: true,
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
     });
 
-    socket.connect();
-
-    set({ socket });
-
-    // listen for online users event
-    socket.on("getOnlineUsers", (userIds) => {
-      set({ onlineUsers: userIds });
+    newSocket.on("connect", () => {
+      console.log("Socket Connected");
     });
+
+    newSocket.on("disconnect", () => {
+      console.log("Socket Disconnected");
+    });
+
+    newSocket.on("getOnlineUsers", (users) => {
+      set({ onlineUsers: users });
+    });
+
+    set({ socket: newSocket });
   },
 
   disconnectSocket: () => {
-    if (get().socket?.connected) get().socket.disconnect();
-  },
+    const socket = get().socket;
+
+    if (socket) {
+      socket.removeAllListeners();
+      socket.disconnect();
+    }
+
+    set({
+      socket: null,
+      onlineUsers: []
+    });
+  }
 }));

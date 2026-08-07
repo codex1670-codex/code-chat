@@ -59,7 +59,7 @@ export const useChatStore = create((set, get) => ({
   },
 
   sendMessage: async (messageData) => {
-    const { selectedUser, messages } = get();
+    const { selectedUser } = get();
     const { authUser } = useAuthStore.getState();
 
     const tempId = `temp-${Date.now()}`;
@@ -73,49 +73,70 @@ export const useChatStore = create((set, get) => ({
       video: messageData.video,
       audio: messageData.audio,
       createdAt: new Date().toISOString(),
-      isOptimistic: true, // flag to identify optimistic messages (optional)
     };
-    // immidetaly update the ui by adding the message
-    set({ messages: [...messages, optimisticMessage] });
+
+    // optimistic update
+    set((state) => ({
+      messages: [...state.messages, optimisticMessage],
+    }));
 
     try {
-      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-      set({ messages: messages.concat(res.data) });
+      const res = await axiosInstance.post(
+        `/messages/send/${selectedUser._id}`,
+        messageData
+      );
+
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg._id === tempId ? res.data : msg
+        ),
+      }));
+
     } catch (error) {
-      // remove optimistic message on failure
-      set({ messages: messages });
+      set((state) => ({
+        messages: state.messages.filter((m) => m._id !== tempId),
+      }));
+
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   },
 
   subscribeToMessages: () => {
-    const { selectedUser, isSoundEnabled } = get();
-    if (!selectedUser) return;
+  const { selectedUser, isSoundEnabled } = get();
 
-    const socket = useAuthStore.getState().socket;
-    if (!socket) return;
+  if (!selectedUser) return;
 
-    socket.off("newMessage"); // old listener remove
+  const socket = useAuthStore.getState().socket;
 
-    socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser =
-        newMessage.senderId === selectedUser._id ||
-        newMessage.senderId?.toString() === selectedUser._id?.toString();
+  if (!socket) return;
 
-      if (!isMessageSentFromSelectedUser) return;
+  socket.removeAllListeners("newMessage");
 
-      set({ messages: [...get().messages, newMessage] });
+  socket.on("newMessage", (newMessage) => {
 
-      if (isSoundEnabled) {
-        const notificationSound = new Audio("/sounds/notification.mp3");
-        notificationSound.currentTime = 0;
-        notificationSound.play().catch((e) => console.log("Audio play failed:", e));
-      }
-    });
-  },
+    const currentUser = get().selectedUser;
 
-  unsubscribeFromMessages: () => {
-    const socket = useAuthStore.getState().socket;
-    socket.off("newMessage");
-  },
+    if (!currentUser) return;
+
+    const senderId = newMessage.senderId?.toString();
+
+    if (senderId !== currentUser._id.toString()) return;
+
+    set((state) => ({
+      messages: [...state.messages, newMessage],
+    }));
+
+    if (isSoundEnabled) {
+      const sound = new Audio("/sounds/notification.mp3");
+      sound.play().catch(() => {});
+    }
+  });
+},
+
+  unsubscribeFromMessages:()=>{
+   const socket=useAuthStore.getState().socket;
+   if(socket){
+      socket.removeAllListeners("newMessage");
+   }
+}
 }));

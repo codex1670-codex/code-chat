@@ -96,12 +96,15 @@ export const sendMessage = async (req, res) => {
     await newMessage.save();
 
     const receiverSocketId = getReceiverSocketId(receiverId.toString());
+    const senderSocketId = getReceiverSocketId(senderId.toString());
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
-    res.status(201).json(newMessage);
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("newMessage", newMessage);
+    }
   } catch (error) {
     console.log("Error in sendMessage controller:", error.message);
     res.status(500).json({ error: "Internal server error" });
@@ -114,10 +117,10 @@ export const getChatPartners = async (req, res) => {
 
     const messages = await Message.find({
       $or: [
-        { senderId: loggedInUserId },
-        { receiverId: loggedInUserId },
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId },
       ],
-    });
+    }).sort({ createdAt: 1 });
 
     const chatPartnerIds = [
       ...new Set(
