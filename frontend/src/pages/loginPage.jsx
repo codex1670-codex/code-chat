@@ -67,7 +67,7 @@ function LoginPage() {
                     {isLoggingIn ? (
                       <LoaderIcon className="w-full h-5 animate-spin text-center" />
                     ) : (
-                      "Sign In"
+                      "Login In"
                     )}
                   </button>
                 </form>
