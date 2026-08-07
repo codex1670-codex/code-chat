@@ -2,13 +2,17 @@ import { useRef, useState } from "react";
 import useKeyBoardSound from "../hooks/useKeyBoardSound";
 import { useChatStore } from "../store/useChatStore";
 import toast from "react-hot-toast";
-import { ImageIcon, SendIcon, XIcon } from "lucide-react";
+import { ImageIcon, SendIcon, XIcon, MicIcon, SquareIcon } from "lucide-react";
 
 function MessageInput() {
   const { playRandomKeyStrokeSound } = useKeyBoardSound();
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioPreview, setAudioPreview] = useState(null);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
 
   const fileInputRef = useRef(null);
 
@@ -23,11 +27,13 @@ function MessageInput() {
       text: text.trim(),
       image: imagePreview,
       video: videoPreview,
+      audio: audioPreview,
     });
 
     setText("");
     setImagePreview(null);
     setVideoPreview(null);
+    setAudioPreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -57,7 +63,42 @@ function MessageInput() {
   const removeMedia = () => {
     setImagePreview(null);
     setVideoPreview(null);
+    setAudioPreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAudioPreview(reader.result);
+          setImagePreview(null);
+          setVideoPreview(null);
+        };
+        reader.readAsDataURL(blob);
+        stream.getTracks().forEach((t) => t.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch {
+      toast.error("Microphone permission needed");
+    }
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setIsRecording(false);
   };
 
   return (
@@ -102,6 +143,15 @@ function MessageInput() {
         </div>
       )}
 
+      {audioPreview && (
+        <div className="max-w-3xl mx-auto mb-3 flex items-center gap-2">
+          <audio src={audioPreview} controls className="h-10" />
+          <button type="button" onClick={removeMedia}>
+            <XIcon className="w-4 h-4 text-slate-200" />
+          </button>
+        </div>
+      )}
+
       <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto flex space-x-4">
         <input
           type="text"
@@ -122,19 +172,30 @@ function MessageInput() {
           className="hidden"
         />
 
+        {/* Image button */}
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${
-            imagePreview || videoPreview ? "text-cyan-500" : ""
-          }`}
+          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${imagePreview || videoPreview ? "text-cyan-500" : ""
+            }`}
         >
           <ImageIcon className="w-5 h-5" />
         </button>
 
+        {/* Mic button */}
+        <button
+          type="button"
+          onClick={isRecording ? stopRecording : startRecording}
+          className={`bg-slate-800/50 rounded-lg px-4 ${isRecording ? "text-red-500" : "text-slate-400 hover:text-slate-200"
+            }`}
+        >
+          {isRecording ? <SquareIcon className="w-5 h-5" /> : <MicIcon className="w-5 h-5" />}
+        </button>
+
+        {/* Send button */}
         <button
           type="submit"
-          disabled={!text.trim() && !imagePreview && !videoPreview}
+          disabled={!text.trim() && !imagePreview && !videoPreview && !audioPreview}
           className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg px-4 py-2 font-medium hover:from-cyan-600 hover:to-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <SendIcon className="w-5 h-5" />

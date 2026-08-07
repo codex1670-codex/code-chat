@@ -39,11 +39,11 @@ export const getMessagesByUserId = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image, video } = req.body;
+    const { text, image, video, audio } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    if (!text && !image && !video) {
+    if (!text && !image && !video && !audio) {
       return res
         .status(400)
         .json({ message: "Text, image, or video is required." });
@@ -72,8 +72,16 @@ export const sendMessage = async (req, res) => {
       const uploadResponse = await cloudinary.uploader.upload(video, {
         resource_type: "video",
       });
-
       videoUrl = uploadResponse.secure_url;
+    }
+
+    let audioUrl;
+    if (audio) {
+      const uploadResponse = await cloudinary.uploader.upload(audio, {
+        resource_type: "video",
+        folder: "voice_notes",
+      });
+      audioUrl = uploadResponse.secure_url;
     }
 
     const newMessage = new Message({
@@ -82,11 +90,12 @@ export const sendMessage = async (req, res) => {
       text,
       image: imageUrl,
       video: videoUrl,
+      audio: audioUrl,
     });
 
     await newMessage.save();
 
-    const receiverSocketId = getReceiverSocketId(receiverId);
+    const receiverSocketId = getReceiverSocketId(receiverId.toString());
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);

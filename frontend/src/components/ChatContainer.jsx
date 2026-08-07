@@ -44,11 +44,10 @@ function ChatContainer() {
                 className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"}`}
               >
                 <div
-                  className={`chat-bubble relative ${
-                    msg.senderId === authUser._id
+                  className={`chat-bubble relative ${msg.senderId === authUser._id
                       ? "bg-cyan-600 text-white"
                       : "bg-slate-800 text-slate-200"
-                  }`}
+                    }`}
                 >
                   {msg.image && (
                     <img
@@ -64,6 +63,9 @@ function ChatContainer() {
                       controls
                       className="rounded-lg max-h-64 mt-2 w-full"
                     />
+                  )}
+                  {msg.audio && (
+                    <audio src={msg.audio} controls className="mt-2 max-w-full" />
                   )}
 
                   {msg.text && <p className="mt-2">{msg.text}</p>}
