@@ -9,13 +9,17 @@ import ChatContainer from "../components/ChatContainer";
 import NoConversationPlaceholder from "../components/NoConversationPlaceholder";
 
 function ChatPage() {
-  const { activeTab, selectedUser } = useChatStore();
+  const { activeTab, selectedUser, setSelectedUser } = useChatStore();
 
   return (
-    <div className="relative w-full max-w-6xl h-[800px]">
+    <div className="relative w-full max-w-6xl h-[100dvh] md:h-[800px]">
       <BorderAnimatedContainer>
-        {/* LEFT SIDE */}
-        <div className="w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col">
+        {/* LEFT SIDE - sidebar */}
+        <div
+          className={`w-full md:w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col ${
+            selectedUser ? "hidden md:flex" : "flex"
+          }`}
+        >
           <ProfileHeader />
           <ActiveTabSwitch />
           <SearchInput />
@@ -25,8 +29,12 @@ function ChatPage() {
           </div>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm">
+        {/* RIGHT SIDE - chat */}
+        <div
+          className={`flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm ${
+            selectedUser ? "flex" : "hidden md:flex"
+          }`}
+        >
           {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
         </div>
       </BorderAnimatedContainer>
@@ -35,6 +43,3 @@ function ChatPage() {
 }
 
 export default ChatPage;
-
-
-
