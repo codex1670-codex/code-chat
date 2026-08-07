@@ -20,7 +20,7 @@ function MessageInput() {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!text.trim() && !imagePreview && !videoPreview) return;
+    if (!text.trim() && !imagePreview && !videoPreview && !audioPreview) return;
     if (isSoundEnabled) playRandomKeyStrokeSound();
 
     sendMessage({

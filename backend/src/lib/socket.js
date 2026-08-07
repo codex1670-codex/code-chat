@@ -14,23 +14,32 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("A user connected", socket.user.fullName);
+// online users map — MUST be before connection
+const userSocketMap = {}; // { userId: socketId }
 
-  const userId = socket.userId.toString();
-  userSocketMap[userId] = socket.id;
-
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected", socket.user.fullName);
-    delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  });
-});
+io.use(socketAuthMiddleware);
 
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId?.toString()];
 }
+
+io.on("connection", (socket) => {
+  console.log("A user connected", socket.user?.fullName);
+
+  const userId = socket.userId?.toString();
+  if (userId) {
+    userSocketMap[userId] = socket.id;
+  }
+
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected", socket.user?.fullName);
+    if (userId) {
+      delete userSocketMap[userId];
+    }
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  });
+});
 
 export { io, app, server };

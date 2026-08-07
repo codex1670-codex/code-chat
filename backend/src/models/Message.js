@@ -20,11 +20,11 @@ const messageSchema = new mongoose.Schema(
     image: {
       type: String,
     },
-    video: {                   
+    video: {
       type: String,
     },
-    video: {
-       type: String,
+    audio: {
+      type: String,
     },
   },
   { timestamps: true }
