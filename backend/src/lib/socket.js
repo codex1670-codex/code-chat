@@ -14,15 +14,6 @@ const io = new Server(server, {
   },
 });
 
-// apply authentication middleware to all socket connections
-io.use(socketAuthMiddleware);
-
-export function getReceiverSocketId(userId) {
-  return userSocketMap[userId?.toString()];
-}
-
-const userSocketMap = {}; // {userId: socketId}
-
 io.on("connection", (socket) => {
   console.log("A user connected", socket.user.fullName);
 
@@ -37,3 +28,9 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
+
+export function getReceiverSocketId(userId) {
+  return userSocketMap[userId?.toString()];
+}
+
+export { io, app, server };
